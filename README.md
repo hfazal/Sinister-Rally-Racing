@@ -3,6 +3,16 @@ Team 2
 
 Map/Package Assets: https://www.dropbox.com/sh/p8lcb3a98g1fswc/mpvQZegzDu
 
+02/27/2014 - hfazal
+Updated a ton of stuff on the map. Stuff left:
+- Palm Tree Mesh for Islands
+- Ramp
+- Ice Bridge
+- Rotating Tunnel
+- General Polish
+
+Map is due March 14th
+
 Keep the Map.udk and Team2Package.upk files up-to-date in that dropbox link!
 
 Load the Map/Package in UDK:
