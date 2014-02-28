@@ -9,6 +9,7 @@ Updated a ton of stuff on the map. Stuff left:
 - Ramp
 - Ice Bridge
 - Rotating Tunnel
+- Bleechers with Crowd (Moved to the inner side of track instead of outside)
 - General Polish
 
 Map is due March 14th
