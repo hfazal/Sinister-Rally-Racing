@@ -3,14 +3,11 @@ Team 2
 
 Map/Package Assets: https://www.dropbox.com/sh/p8lcb3a98g1fswc/mpvQZegzDu
 
-02/27/2014 - hfazal
-Updated a ton of stuff on the map. Stuff left:
-- Palm Tree Mesh for Islands
-- Ramp
-- Ice Bridge
-- Rotating Tunnel
+02/28/2014 - hfazal
+Updated a ton of stuff on the map. Very little stuff left:
 - Bleechers with Crowd (Moved to the inner side of track instead of outside)
 - General Polish
+- Walls along the side of the map
 
 Map is due March 14th
 
