@@ -3,11 +3,36 @@ Team 2
 
 Map/Package Assets: https://www.dropbox.com/sh/p8lcb3a98g1fswc/mpvQZegzDu
 
-02/28/2014 - hfazal
-Updated a ton of stuff on the map. Very little stuff left:
-- Bleechers with Crowd (Moved to the inner side of track instead of outside)
+Map Updates
+
+03/05/2014 - hfazal
+
+Created a low poly fence applied it around the map, added the Kismet items in the tunnel (instead of the tunnel rotating). Stuff left:
+- Bleechers with Crowd
+- Speed Boost-pads
 - General Polish
+
+02/28/2014 - hfazal
+
+Updated a ton of stuff on the map. Very little stuff left:
+- Bleechers with Crowd
+- General Polish
+- Speed Boost-pads
 - Walls along the side of the map
+- Kismet moving items in tunnel
+
+02/27/2014 - hfazal
+
+Updated a ton of stuff on the map. Stuff left:
+- Bleechers with Crowd (Moved to the inner side of track instead of outside)
+- Palm Tree Mesh for Islands
+- Ramp
+- Ice Bridge
+- Rotating Tunnel
+- General Polish
+- Speed Boost-pads
+- Walls along the side of the map
+- Kismet moving items in tunnel
 
 Map is due March 14th
 
