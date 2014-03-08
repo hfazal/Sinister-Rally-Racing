@@ -5,17 +5,26 @@ Map/Package Assets: https://www.dropbox.com/sh/p8lcb3a98g1fswc/mpvQZegzDu
 
 Map Updates
 
+03/07/2014 - hfazal
+
+Added Item Boxes, Boost Pads (Not visible yet). Stuff left:
+- Checkpoints
+- Speed Boost-pads (Visibility)
+- General Polish
+
 03/05/2014 - hfazal
 
 Created a low poly fence applied it around the map, added the Kismet items in the tunnel (instead of the tunnel rotating). Stuff left:
-- Bleechers with Crowd
+- Item Boxes
+- Checkpoints
 - Speed Boost-pads
 - General Polish
 
 02/28/2014 - hfazal
 
 Updated a ton of stuff on the map. Very little stuff left:
-- Bleechers with Crowd
+- Item Boxes
+- Checkpoints
 - General Polish
 - Speed Boost-pads
 - Walls along the side of the map
@@ -24,7 +33,8 @@ Updated a ton of stuff on the map. Very little stuff left:
 02/27/2014 - hfazal
 
 Updated a ton of stuff on the map. Stuff left:
-- Bleechers with Crowd (Moved to the inner side of track instead of outside)
+- Item Boxes
+- Checkpoints
 - Palm Tree Mesh for Islands
 - Ramp
 - Ice Bridge
