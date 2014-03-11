@@ -1,0 +1,152 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">Win32</Platform>
+    <ProductVersion>1.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>3e388019-f245-46b5-b5fa-7db01920336e</ProjectGuid>
+    <OutputType>UserMod</OutputType>
+    <ProjectType>UnrealScript</ProjectType>
+    <RootNamespace>Sinister</RootNamespace>
+    <AssemblyName>Sinister</AssemblyName>
+    <Name>Sinister</Name>
+    <TargetGame>UnrealEngine 3 Licensee</TargetGame>
+    <BaseContentPath>..\..\Engine\Content</BaseContentPath>
+    <GameContentPath>..\..\Sinister\Content</GameContentPath>
+    <PackageExtensions>.upk;.udk</PackageExtensions>
+    <UccPath>..\..\Binaries\Win32\UDK.exe</UccPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <UccUseUnpublished>True</UccUseUnpublished>
+    <UseUnpublished>False</UseUnpublished>
+    <ForceWindowedMode>True</ForceWindowedMode>
+    <WindowWidth>1024</WindowWidth>
+    <WindowHeight>768</WindowHeight>
+    <ShowLogWindow>False</ShowLogWindow>
+    <LogToFile>False</LogToFile>
+    <BuildArgs />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <UccUseUnpublished>True</UccUseUnpublished>
+    <UseUnpublished>False</UseUnpublished>
+    <ForceWindowedMode>False</ForceWindowedMode>
+    <ShowLogWindow>False</ShowLogWindow>
+    <LogToFile>False</LogToFile>
+    <BuildArgs />
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="*\Classes\*.uc" />
+    <Content Include="**\*.uci" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\" />
+    <Folder Include="Core\Classes\" />
+    <Folder Include="Engine\" />
+    <Folder Include="Engine\Classes\" />
+    <Folder Include="GameFramework\" />
+    <Folder Include="GameFramework\Classes\" />
+    <Folder Include="GFxUIEditor\" />
+    <Folder Include="GFxUIEditor\Classes\" />
+    <Folder Include="GFxUI\" />
+    <Folder Include="GFxUI\Classes\" />
+    <Folder Include="IpDrv\" />
+    <Folder Include="IpDrv\Classes\" />
+    <Folder Include="Sinister\Classes\" />
+    <Folder Include="UDKGame" />
+    <Folder Include="Sinister" />
+    <Folder Include="OnlineSubsystemGameCenter\" />
+    <Folder Include="OnlineSubsystemGameCenter\Classes\" />
+    <Folder Include="OnlineSubsystemPC\" />
+    <Folder Include="OnlineSubsystemPC\Classes\" />
+    <Folder Include="OnlineSubsystemSteamworks\" />
+    <Folder Include="OnlineSubsystemSteamworks\Classes\" />
+    <Folder Include="SubstanceAirEd\" />
+    <Folder Include="SubstanceAirEd\Classes\" />
+    <Folder Include="SubstanceAir\" />
+    <Folder Include="SubstanceAir\Classes\" />
+    <Folder Include="UDKBase\" />
+    <Folder Include="UDKBase\classes\" />
+    <Folder Include="UDKGame\Config" />
+    <Folder Include="UnrealEd\" />
+    <Folder Include="UnrealEd\Classes\" />
+    <Folder Include="UTEditor\" />
+    <Folder Include="UTEditor\Classes\" />
+    <Folder Include="UTGameContent\" />
+    <Folder Include="UTGameContent\Classes\" />
+    <Folder Include="UTGame\" />
+    <Folder Include="UTGame\Classes\" />
+    <Folder Include="WinDrv\" />
+    <Folder Include="WinDrv\Classes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Config Include="..\..\UDKGame\Config\DefaultEditor.ini">
+      <Link>UDKGame\Config\DefaultEditor.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultEditor.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultEditorKeyBindings.ini">
+      <Link>UDKGame\Config\DefaultEditorKeyBindings.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultEditorKeyBindings.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultEditorUDK.ini">
+      <Link>UDKGame\Config\DefaultEditorUDK.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultEditorUDK.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultEditorUserSettings.ini">
+      <Link>UDKGame\Config\DefaultEditorUserSettings.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultEditorUserSettings.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultEngine.ini">
+      <Link>UDKGame\Config\DefaultEngine.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultEngine.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultEngineUDK.ini">
+      <Link>UDKGame\Config\DefaultEngineUDK.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultEngineUDK.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultGame.ini">
+      <Link>UDKGame\Config\DefaultGame.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultGame.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultGameUDK.ini">
+      <Link>UDKGame\Config\DefaultGameUDK.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultGameUDK.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultInput.ini">
+      <Link>UDKGame\Config\DefaultInput.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultInput.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultInputDefaults.ini">
+      <Link>UDKGame\Config\DefaultInputDefaults.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultInputDefaults.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultLightmass.ini">
+      <Link>UDKGame\Config\DefaultLightmass.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultLightmass.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultSystemSettings.ini">
+      <Link>UDKGame\Config\DefaultSystemSettings.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultSystemSettings.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultUI.ini">
+      <Link>UDKGame\Config\DefaultUI.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultUI.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultWeapon.ini">
+      <Link>UDKGame\Config\DefaultWeapon.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultWeapon.ini" />
+    <Config Include="..\..\UDKGame\Config\DefaultWeaponDefaults.ini">
+      <Link>UDKGame\Config\DefaultWeaponDefaults.ini</Link>
+    </Config>
+    <Config Include="..\..\UDKGame\Config\DefaultWeaponDefaults.ini" />
+  </ItemGroup>
+  <Import Condition="'$(MSBuildExtensionsPath32)' != ''" Project="$(MSBuildExtensionsPath32)\PixelMine\UnrealScript.targets" />
+  <Import Condition="'$(MSBuildExtensionsPath32)' == ''" Project="$(MSBuildExtensionsPath)\PixelMine\UnrealScript.targets" />
+</Project>

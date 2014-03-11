@@ -19,6 +19,7 @@
 /UDKGame/Build/
 /UDKGame/Cloud/
 /UDKGame/Content/
+!/UDKGame/Content/Shared/Team2Package*.upk
 /UDKGame/Localization/
 /UDKGame/Movies/
 /UDKGame/Logs/
@@ -43,7 +44,6 @@
 /UDKGame/Config/UDKWeapon.ini
 /UDKGame/Content/Maps
 /UDKGame/Autosaves
-!/UDKGame/Content/Shared/Team2Package.upk
 *.suo
 *.u
 *.sdf
