@@ -1,9 +1,13 @@
-Team 2
+Team 2: Sinister Rally Racing
 =====
 
 Map/Package Assets: https://www.dropbox.com/sh/p8lcb3a98g1fswc/mpvQZegzDu
 
 Map Updates
+
+03/12/2014 - hfazal
+
+Completed Map (Checkpoints will be added programmatically). To see boost-pads, the customized UTVehicleBoostPad.uc is required)
 
 03/07/2014 - hfazal
 
