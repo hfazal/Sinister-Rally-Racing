@@ -12,14 +12,16 @@
 /Development/Src/Substance*/
 /Development/Src/UDKBase/
 /Development/Src/UTEditor/
+!/Development/Src/UTGame/Classes/UTVehicleBoostPad.uc
 /Development/Src/UTGame*/
 /Development/Src/UnrealEd/
 /Development/Src/WinDrv/
 /Development/Src/obj/
 /UDKGame/Build/
 /UDKGame/Cloud/
+!/UDKGame/Content/Shared/Team2Package.upk
+!/UDKGame/Content/Shared/Team2Package.upk
 /UDKGame/Content/
-!/UDKGame/Content/Shared/Team2Package*.upk
 /UDKGame/Localization/
 /UDKGame/Movies/
 /UDKGame/Logs/

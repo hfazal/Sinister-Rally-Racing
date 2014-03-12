@@ -11,7 +11,7 @@
     <NoStartupMovies>False</NoStartupMovies>
     <UseUnpublished>True</UseUnpublished>
     <ForceWindowedMode>True</ForceWindowedMode>
-    <WindowWidth>1024</WindowWidth>
+    <WindowWidth>1200</WindowWidth>
     <WindowHeight>768</WindowHeight>
     <ShowLogWindow>True</ShowLogWindow>
     <LogWindowX>0</LogWindowX>
