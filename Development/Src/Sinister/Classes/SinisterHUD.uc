@@ -1,8 +1,16 @@
 class SinisterHUD extends UTHUD;
 
-var() float DistanceFromX;
-var() float DistanceFromY;
-var() float WidthOfComponents;
+var float DistanceFromX;
+var float DistanceFromY;
+var float WidthOfComponents;
+var SinisterGame gameContext;
+
+event PostBeginPlay()
+{
+   Super.PostBeginPlay();
+	//Cast the GameInfo object to MyGameInfo   
+   gameContext = SinisterGame(worldinfo.game);
+}
 
 function DrawGameHud()
 {
@@ -15,19 +23,30 @@ function DrawGameHud()
 
 	//Draw Positional Information
 	BoxPositionalInformation(WidthOfComponents, 200.00, DistanceFromX, 10);
-
-	//Box of Positional Information
-    //DrawHUDBox(WidthOfComponents, 200.00, DistanceFromX, 10);
 }
 
 function BoxMinimap(float width, float height, float widthToStartAt, float heightToStartAt){
+	local String checkpointlog;
+
+	checkpointlog = "minimap will go here";
+
 	DrawHUDBox(width, height, widthToStartAt, heightToStartAt);
-	WriteText("minimap will go here", class'Engine'.static.GetLargeFont(), widthToStartAt, heightToStartAt);
+
+	WriteText(checkpointlog, class'Engine'.static.GetLargeFont(), widthToStartAt, heightToStartAt);
 }
 
 function BoxPositionalInformation(float width, float height, float widthToStartAt, float heightToStartAt){
+	local SinisterPlayerTracker     pt;
+	local String checkpointlog;
+
+	checkpointlog = "";
+
+	foreach gameContext.TheSinisterPlayers(pt){
+		checkpointlog $= "Player" $ pt.pNum $ " " $ pt.lastCheckpointPassed $ "/19 Checkpoints\n";
+	}
+
 	DrawHUDBox(width, height, widthToStartAt, heightToStartAt);
-	WriteText("1st: Player 4 - 0:04\n2nd: You - \n3rd: Player 2 + 0:02\n4th: Player 2 + 0:04", class'Engine'.static.GetLargeFont(), widthToStartAt+10, heightToStartAt+10);
+	WriteText(checkpointlog, class'Engine'.static.GetLargeFont(), widthToStartAt+10, heightToStartAt+10);
 }
 
 function WriteText(string text, Font size, float widthToStartAt, float heightToStartAt)
