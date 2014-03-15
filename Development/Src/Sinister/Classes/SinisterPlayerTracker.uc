@@ -11,4 +11,5 @@ DefaultProperties
 	pNum = -1;
 	lastCheckinTime = 0;
 	lastCheckpointPassed = 0;
+	weaponChoice=0;
 }

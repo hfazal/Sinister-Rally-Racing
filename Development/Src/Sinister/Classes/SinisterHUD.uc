@@ -42,7 +42,27 @@ function BoxPositionalInformation(float width, float height, float widthToStartA
 	checkpointlog = "";
 
 	foreach gameContext.TheSinisterPlayers(pt){
-		checkpointlog $= "Player" $ pt.pNum $ " " $ pt.lastCheckpointPassed $ "/19 Checkpoints\n";
+		checkpointlog $= "Player" $ pt.pNum $ " " $ pt.lastCheckpointPassed $ "/" $ gameContext.checkpointTotal $ " Checkpoints\n";
+	}
+
+	foreach gameContext.TheSinisterPlayers(pt){
+		if (pt.pNum == self.PlayerOwner.PlayerNum){
+			switch (pt.weaponChoice) {
+				case 0:
+					checkpointlog $= "You do not have an item\n";
+				break;
+				case 1:
+					checkpointlog $= "You have a Speed Boost\n";
+				break;
+				case 2:
+					checkpointlog $= "You have a Missile\n";
+				break;
+				case 3:
+					checkpointlog $= "You have a Bear Trap\n";
+				break;
+				default:
+			}
+		}
 	}
 
 	DrawHUDBox(width, height, widthToStartAt, heightToStartAt);
