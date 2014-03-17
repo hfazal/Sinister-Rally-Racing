@@ -31,15 +31,21 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 
 	Super.Touch(Other, OtherComp, HitLocation, HitNormal);
 
-	pawnAtHand = Pawn( Other );   //attempt to cast the actor that touched 
+	pawnAtHand = Pawn( Other );                                                     //attempt to cast the actor that touched 
 
-	if(pawnAtHand != None)
-	{	
-		foreach gameContext.TheSinisterPlayers(pt){
-			if (pt.pNum == pawnAtHand.Controller.PlayerNum){
-				if (pt.lastCheckpointPassed == (CheckpointOrder-1)){
-					pt.lastCheckpointPassed += 1;
-					gameContext.onlyDisplayCheckpoint(CheckpointOrder+1);
+	if(pawnAtHand != None){	                                                        // if the pawn that touched this checkpoint is not null
+		foreach gameContext.TheSinisterPlayers(pt){                                 // loop through all the SinisterPlayerTracker objects for the game
+			if (pt.c.PlayerNum == pawnAtHand.Controller.PlayerNum){                 // if that SinisterPlayerTracker matches the pawn's controller/owner
+				if ((pt.lastCheckpointPassed+1) == CheckpointOrder){                // if that player's last tracked checkpoint + 1 matches this checkpoint
+					if (pt.lastCheckpointPassed+1 == gameContext.checkpointsPerLapCount){
+						pt.lastCheckpointPassed = 0;
+						pt.lastLapCompleted += 1;
+					}
+					else{
+						pt.lastCheckpointPassed += 1;                                   // add one to the player's count	
+					}
+					pt.lastCheckinTime = WorldInfo.TimeSeconds;
+					gameContext.onlyDisplayCheckpoint(CheckpointOrder+1);           // hide/show the correct checkpoints
 				}
 			}
 		}

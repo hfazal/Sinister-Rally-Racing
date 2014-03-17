@@ -19,41 +19,16 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 
 	local Pawn                      pawnAtHand;
 	local SinisterPlayerTracker     pt;
-	local int                       status;
-	local float                     myTime;
-	//local int                       i;
 
 	Super.Touch(Other, OtherComp, HitLocation, HitNormal);
 
 	pawnAtHand = Pawn( Other );   //attempt to cast the actor that touched 
 
-	if(pawnAtHand != None)
-	{	
+	if(pawnAtHand != None){	
 		foreach gameContext.TheSinisterPlayers(pt){
 			if (pt.c.PlayerNum == pawnAtHand.Controller.PlayerNum){
 				   `log("I Hit the box");
                    `log("Equip Weapon");
-					status=int(RandRange(1,3));
-                   `log( "this is my var name " $ status);
-				    setHidden(true);
-				    myTime = worldinfo.TimeSeconds;
-                    `log( "time since touch " $ myTime);
-				    setHidden(false);
-				
-					if(status == 1) {  // set speed boost 
-					pt.weaponChoice=1;
-					//ActivateRocketBoosters();
-				    
-					}
-
-					if(status == 2) { //set bear claw
-					pt.weaponChoice=2;
-					}
-
-					else {    //status must be 3, set homing missle 
-					pt.weaponChoice=3;
-					}
-
 			}
 		}
 	}

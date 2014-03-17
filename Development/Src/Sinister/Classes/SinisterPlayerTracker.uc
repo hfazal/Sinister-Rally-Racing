@@ -1,15 +1,20 @@
 class SinisterPlayerTracker extends Object;
 
-var int pNum;              //unique to each player
+// Player Unique
+var Controller c;
+
+//Tracking the Player on the Map
 var float lastCheckinTime;
 var int lastCheckpointPassed;
-var Controller c;
+var int lastLapCompleted;
+
+//Weapons
 var int weaponChoice;
 
 DefaultProperties
 {
-	pNum = -1;
 	lastCheckinTime = 0;
 	lastCheckpointPassed = 0;
+	lastLapCompleted = 0;
 	weaponChoice=0;
 }

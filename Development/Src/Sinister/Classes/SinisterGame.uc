@@ -11,8 +11,8 @@ class SinisterGame extends UTGame;
 
 var array<SinisterPlayerTracker> TheSinisterPlayers;
 var array<SinisterCheckpoint> TheSinisterCheckpoints;
-const checkpointTotal = 19; //one lap is 19
-
+var() int lapCount;                                     // defaulted to 2, in future will be alterable via main menu
+const checkpointsPerLapCount = 19;                      // one lap is 19
 
 event Tick(float DeltaTime){
 	local SinisterPlayerTracker     pt;
@@ -21,8 +21,8 @@ event Tick(float DeltaTime){
 
 	//check for game end
 	foreach TheSinisterPlayers(pt){
-		if (pt.lastCheckpointPassed == checkpointTotal){
-			EndGame(pt.c.PlayerReplicationInfo, "Player" $ pt.pNum $ " Won");
+		if (pt.lastLapCompleted == lapCount){
+			EndGame(pt.c.PlayerReplicationInfo, "Player" $ pt.c.PlayerNum $ " Won");
 			bGameEnded = true;
 		}
 	}
@@ -34,10 +34,9 @@ function StartMatch(){
 
 	super.StartMatch();
 
-	//make sure this is "adding" by value not reference
+	//Build Array of SinisterPlayerTrackers
 	foreach WorldInfo.AllControllers(class'Controller', C){
 		pt = New class'SinisterPlayerTracker';
-		pt.pNum = C.PlayerNum;
 		pt.c = C;
 		TheSinisterPlayers.AddItem(pt);
 	}
@@ -70,4 +69,5 @@ DefaultProperties
 	HUDType=class'Sinister.SinisterHUD'
 	bUseClassicHUD=true
 	bDelayedStart=false
+	lapCount=2
 }
