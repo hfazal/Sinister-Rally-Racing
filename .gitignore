@@ -13,6 +13,7 @@
 /Development/Src/UDKBase/
 /Development/Src/UTEditor/
 !/Development/Src/UTGame/Classes/UTVehicleBoostPad.uc
+!/Development/Src/UTGame/Classes/UTVehicle_Scorpion.uc
 /Development/Src/UTGame*/
 /Development/Src/UnrealEd/
 /Development/Src/WinDrv/
