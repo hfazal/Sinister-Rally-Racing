@@ -19,16 +19,66 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 
 	local Pawn                      pawnAtHand;
 	local SinisterPlayerTracker     pt;
+	local int                       status;
+	//local int                       i;
+	//local UTVehicle_Scorpion vehicleAtHand;
 
 	Super.Touch(Other, OtherComp, HitLocation, HitNormal);
 
 	pawnAtHand = Pawn( Other );   //attempt to cast the actor that touched 
 
-	if(pawnAtHand != None){	
+	if(pawnAtHand != None)
+	{	
 		foreach gameContext.TheSinisterPlayers(pt){
-			if (pt.c.PlayerNum == pawnAtHand.Controller.PlayerNum){
-				   `log("I Hit the box");
-                   `log("Equip Weapon");
+			if (pt.c.PlayerNum == pawnAtHand.Controller.PlayerNum && pt.weaponChoice==0){
+					status=int(RandRange(1,4));
+                   `log( "ran gen " $ status);
+				    setHidden(true);
+				    setHidden(false);
+				
+					switch(status) {
+
+					case 1: 
+					pt.weaponChoice=1;
+					`log( "WEAPON SET");
+					`log( "the WEAPON IS PT " $ pt.weaponChoice);
+					break;
+
+					case 2: 
+					pt.weaponChoice=2;
+					`log( "WEAPON SET");
+					`log( "the WEAPON IS PT " $ pt.weaponChoice);
+					break;
+
+					case 3: 
+					pt.weaponChoice=3;
+					`log( "WEAPON SET");
+					`log( "the WEAPON IS PT " $ pt.weaponChoice);
+					break;
+
+
+					}
+
+					/*
+					if(status == 1) {  // set speed boost 
+					pt.weaponChoice=1;
+					`log( "WEAPON SET");
+					`log( "the WEAPON IS PT " $ pt.weaponChoice);
+					
+					//vehicleAtHand = UTVehicle_Scorpion( self );
+					//vehicleAtHand.ActivateRocketBoosters();
+					//ActivateRocketBoosters();
+				    
+					}
+
+					else if(status == 2) { //set bear claw
+					pt.weaponChoice=2;
+					}
+
+					else {    //status must be 3, set homing missle 
+					pt.weaponChoice=3;
+					}*/
+
 			}
 		}
 	}
@@ -36,6 +86,8 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 
 DefaultProperties
 {
+	//bStatic=False;
+	//PlayerControllerClass=class'Sinister.SinisterPlayerController'
 	bCollideActors=true    
     bBlockActors=false
     
@@ -61,4 +113,5 @@ DefaultProperties
     End Object
     
     Components.add( StaticMeshComp )
+
 }
