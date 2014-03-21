@@ -13,6 +13,7 @@ var repnotify bool	bBoostersActivated;
 var float MaxBoostDuration;
 /** used to track boost recharging duration */
 var float BoostChargeTime;
+const offsetItemBoxBy = 200.00;
 
 
 event PostBeginPlay(){
@@ -24,71 +25,73 @@ event PostBeginPlay(){
 
 exec function startSpeedBoost() {
 
-	 local UTVehicle_Scorpion vehicleAtHand;
+	local UTVehicle_Scorpion vehicleAtHand;
 	local SinisterPlayerTracker     pt;
 	local vector BoostDir;
-
-	`log( "out of there!");
+	local vector hello;
+	local int adjustXBy;
+	local int adjustYBy;
 
  foreach gameContext.TheSinisterPlayers(pt){
             if (self.PlayerNum == pt.c.PlayerNum){
+				vehicleAtHand = UTVehicle_Scorpion( self.Pawn ); // casts it
+				`log(vehicleAtHand.Location.X $ " " $ vehicleAtHand.Location.Y $ " " $ vehicleAtHand.Location.Z $ " " $ vehicleAtHand.Rotation.Yaw);
+				
                 switch (pt.weaponChoice){
                     case 0:
                     //do nothing
                         break;
                     case 1:    //lets say this is the boost
                         //code for the boost
-						//`log( "IN THE BOOST");
-						//`log( "Got the Boost " $ pt.weaponChoice);
-                        //self.Pawn this is the vehicle, but we need to make it a vehicle class
-                        vehicleAtHand = UTVehicle_Scorpion( self.Pawn ); // casts it
-                        //now here you can call taht method
                         vehicleAtHand.ActivateRocketBoosters(); //or whatever its called
 						BoostStartTime=worldInfo.TimeSeconds;
 
 						BoostDir = vector(Rotation);
-		if ( VSizeSq(Velocity) < BoostPowerSpeed*BoostPowerSpeed )
-		{
-			/*
-			BoostStartTime=BoostStartTime+1;
-			`log( "Made it to boost part");
-			bBoostersActivated=TRUE;
-			if ( BoostDir.Z > 0.7 )
-				vehicleAtHand.AddForce( (1.0 - BoostDir.Z) * BoosterForceMagnitude * BoostDir );
-			else
-				vehicleAtHand.AddForce( BoosterForceMagnitude * BoostDir );
-		}
-		else
-			vehicleAtHand.AddForce( 0.25 * BoosterForceMagnitude * BoostDir );*/
-		
-			
-				vehicleAtHand.AddForce( BoosterForceMagnitude * BoostDir );
-			
-				
-		}
-
-		`log( "out of there!");
-				vehicleAtHand.AddForce(BoostDir * 0);
-
-		/*
-				if ( BoostStartTime > MaxBoostDuration ) // Ran out of Boost
-				{
-					`log( "RANOUT");
-					vehicleAtHand.DeactivateRocketBoosters();
-					bBoostersActivated = FALSE;
-					BoostChargeTime = WorldInfo.TimeSeconds;
-					break;
-				}		*/
-
-						//`log( "JUST BOOSTED");
-					pt.weaponChoice=0;
+						if ( VSizeSq(Velocity) < BoostPowerSpeed*BoostPowerSpeed )
+						{
+							vehicleAtHand.AddForce( BoosterForceMagnitude * BoostDir );
+							
+						}
+						vehicleAtHand.AddForce(BoostDir * 0);
+						
+						pt.weaponChoice=0;
                         break;
                     case 2:    //lets say this is the missile
                         //code for the missile
+					
 						pt.weaponChoice=0;
                         break;
                     case 3:    //lets say this is the bear trap
                         //code for the bear trap
+						//figure out which way the car is facing so we can decide where to spawn the beartrap
+
+						if ( vehicleAtHand.Rotation.Yaw >= 8192 && vehicleAtHand.Rotation.Yaw <= 24576 ){
+							//facing north
+							`log("facing north");
+							adjustYBy = offsetItemBoxBy * -1.0;
+						}
+						else if ( vehicleAtHand.Rotation.Yaw >= -24576 && vehicleAtHand.Rotation.Yaw <= -8192 ){
+							//facing south
+							`log("facing south");
+							adjustYBy = offsetItemBoxBy;
+						}
+						else if ( (vehicleAtHand.Rotation.Yaw >= 24576 && vehicleAtHand.Rotation.Yaw <= 32768) || (vehicleAtHand.Rotation.Yaw >= -32768 && vehicleAtHand.Rotation.Yaw <= -8192) ){
+							//facing east
+							`log("facing east");
+							adjustXBy = offsetItemBoxBy;
+						}
+						else if ( (vehicleAtHand.Rotation.Yaw >= 0 && vehicleAtHand.Rotation.Yaw <= 8192) || (vehicleAtHand.Rotation.Yaw >= -8192 && vehicleAtHand.Rotation.Yaw <= 0) ){
+							//facing west
+							`log("facing west");
+							adjustXBy = offsetItemBoxBy * -1.0;
+						}
+                    	
+
+						hello.X=vehicleAtHand.Location.X + adjustXBy;
+						hello.Y=vehicleAtHand.Location.Y + adjustYBy;
+						hello.Z=vehicleAtHand.Location.Z + 35.00;
+
+						Spawn(class'SinisterBearTrap',,,hello);
 						pt.weaponChoice=0;
                         break;
                 }
@@ -120,4 +123,5 @@ DefaultProperties
 	//MaxBoostDuration=2.0
 	MaxBoostDuration=5.0
 	BoostChargeTime=-10.0
+	hello=5
 }
