@@ -58,7 +58,7 @@ function BoxPositionalInformation(float width, float height, float widthToStartA
 					checkpointlog $= "Missile\n";
 				break;
 				case 3:
-					checkpointlog $= "Bear Trap\n";
+					checkpointlog $= "Proximity Mine\n";
 				break;
 				default:
 			}
