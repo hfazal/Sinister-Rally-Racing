@@ -25,7 +25,7 @@ event PostBeginPlay(){
 
 exec function startSpeedBoost() {
 
-	local UTVehicle_Scorpion vehicleAtHand;
+	local UTVehicle_Sinister vehicleAtHand;
 	local SinisterPlayerTracker     pt;
 	local vector BoostDir;
 	local vector hello;
@@ -34,7 +34,7 @@ exec function startSpeedBoost() {
 
  foreach gameContext.TheSinisterPlayers(pt){
             if (self.PlayerNum == pt.c.PlayerNum){
-				vehicleAtHand = UTVehicle_Scorpion( self.Pawn ); // casts it
+				vehicleAtHand = UTVehicle_Sinister( self.Pawn ); // casts it
 				`log(vehicleAtHand.Location.X $ " " $ vehicleAtHand.Location.Y $ " " $ vehicleAtHand.Location.Z $ " " $ vehicleAtHand.Rotation.Yaw);
 				
                 switch (pt.weaponChoice){

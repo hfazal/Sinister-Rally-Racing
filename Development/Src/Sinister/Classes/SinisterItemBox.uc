@@ -37,47 +37,18 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 				    setHidden(false);
 				
 					switch(status) {
+						case 1: 
+							pt.weaponChoice=1;
+						break;
 
-					case 1: 
-					pt.weaponChoice=1;
-					`log( "WEAPON SET");
-					`log( "the WEAPON IS PT " $ pt.weaponChoice);
-					break;
+						case 2: 
+							pt.weaponChoice=2;
+						break;
 
-					case 2: 
-					pt.weaponChoice=2;
-					`log( "WEAPON SET");
-					`log( "the WEAPON IS PT " $ pt.weaponChoice);
-					break;
-
-					case 3: 
-					pt.weaponChoice=3;
-					`log( "WEAPON SET");
-					`log( "the WEAPON IS PT " $ pt.weaponChoice);
-					break;
-
-
+						case 3: 
+							pt.weaponChoice=3;
+						break;
 					}
-
-					/*
-					if(status == 1) {  // set speed boost 
-					pt.weaponChoice=1;
-					`log( "WEAPON SET");
-					`log( "the WEAPON IS PT " $ pt.weaponChoice);
-					
-					//vehicleAtHand = UTVehicle_Scorpion( self );
-					//vehicleAtHand.ActivateRocketBoosters();
-					//ActivateRocketBoosters();
-				    
-					}
-
-					else if(status == 2) { //set bear claw
-					pt.weaponChoice=2;
-					}
-
-					else {    //status must be 3, set homing missle 
-					pt.weaponChoice=3;
-					}*/
 
 			}
 		}
