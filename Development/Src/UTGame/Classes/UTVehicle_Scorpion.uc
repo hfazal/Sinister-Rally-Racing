@@ -207,7 +207,7 @@ function Tick( FLOAT DeltaSeconds )
 		}
 	}
 	else
-	{   /*
+	{   
 		if ( bTryToBoost )
 		{
 			// turbo mode
@@ -220,7 +220,7 @@ function Tick( FLOAT DeltaSeconds )
 					BoostStartTime = WorldInfo.TimeSeconds;
 				}
 			}
-		}*/
+		}
 
 		bTryToBoost = false;
 

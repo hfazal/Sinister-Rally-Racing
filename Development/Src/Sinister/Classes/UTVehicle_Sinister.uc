@@ -4,6 +4,9 @@
 class UTVehicle_Sinister extends UTVehicle
 	abstract;
 
+/** Name of the Bone/Socket to base the camera on */
+var() name CameraTag;
+var int CamType;
 /** animation for the Scorpion's extendable blades */
 var UTAnimBlendByWeapon BladeBlend;
 
@@ -156,6 +159,43 @@ replication
 		bBoostersActivated;
 }
 
+exec function ChangeCam()
+{
+    CamType++; 
+
+    if (CamType >= 2)
+    {
+		CamType = 0;
+    }
+}
+
+simulated function VehicleCalcCamera(float DeltaTime, int SeatIndex, out vector out_CamLoc, out rotator out_CamRot, out vector CamStart, optional bool bPivotOnly)
+{
+	local vector X, Y, Z;
+	local vector SocketLoc;
+	local rotator SocketRot;
+
+	switch( CamType )
+	{
+		case 0: //Chase
+			GetActorEyesViewPoint( out_CamLoc, out_CamRot );
+			GetAxes(Rotation,X,Y,Z);
+
+			out_CamLoc = Location - 700 * X;
+			out_CamLoc.Z = Location.Z + 350;
+
+			out_CamRot.Yaw = Rotation.Yaw;
+			out_CamRot.Pitch = (-22.0f     *DegToRad) * RadToUnrRot;
+			out_CamRot.Roll = 0;
+		break;
+		case 1: // First person
+			Mesh.GetSocketWorldLocationAndRotation(CameraTag, SocketLoc, SocketRot);
+			out_CamLoc = SocketLoc;
+			out_CamRot = SocketRot;
+		break;
+	}
+}
+
 /** 
   * Returns true if self destruct conditions (boosting, going fast enough) are met 
   */
@@ -268,7 +308,7 @@ function Tick( FLOAT DeltaSeconds )
 	}
 
 	if (bBladesExtended)
-	{   `log("blade me");
+	{  
 		if (!bRightBladeBroken)
 		{
 			// trace across right blade
@@ -376,8 +416,6 @@ function Tick( FLOAT DeltaSeconds )
 simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
-
-	`LOG("THE FUCK");
 
 	if(SimObj.bAutoDrive)
 	{
@@ -784,7 +822,7 @@ simulated function bool OverrideEndFire(byte FireModeNum)
 
 /** extends and retracts the blades */
 simulated function SetBladesExtended(bool bExtended)
-{
+{/*
 	local int i;
 
 	bBladesExtended = bExtended;
@@ -805,7 +843,7 @@ simulated function SetBladesExtended(bool bExtended)
 		}
 		BladeBlend.AnimStopFire();
 		PlaySound(BladeRetractSound, true);
-	}
+	}*/
 }
 simulated function PlaySelfDestruct()
 {
@@ -1217,12 +1255,12 @@ defaultproperties
 {
 	Health=300
 	StolenAnnouncementIndex=5
-
+	CameraTag=GunViewSocket
 	COMOffset=(x=-40.0,y=0.0,z=-36.0)
 	UprightLiftStrength=280.0
 	UprightTime=1.25
 	UprightTorqueStrength=500.0
-	bCanFlip=true
+	bCanFlip=false
 	bSeparateTurretFocus=true
 	bHasHandbrake=true
 	bStickDeflectionThrottle=true
