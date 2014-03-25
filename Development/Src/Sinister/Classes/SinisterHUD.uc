@@ -86,5 +86,5 @@ function DrawHUDBox(float width, float height, float widthToStartAt, float heigh
 
 DefaultProperties
 {
-	
+	bNoCrosshair = true;
 }
