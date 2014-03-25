@@ -11,6 +11,9 @@ var int lastLapCompleted;
 //Weapons
 var int weaponChoice;
 
+//Terrain Stuff
+var array<String> terrainStack;
+
 DefaultProperties
 {
 	lastCheckinTime = 0;
