@@ -4,6 +4,8 @@
 class UTVehicle_Sinister extends UTVehicle
 	abstract;
 
+var SinisterGame gameContext;
+
 /** Name of the Bone/Socket to base the camera on */
 var() name CameraTag;
 var int CamType;
@@ -181,8 +183,8 @@ simulated function VehicleCalcCamera(float DeltaTime, int SeatIndex, out vector 
 			GetActorEyesViewPoint( out_CamLoc, out_CamRot );
 			GetAxes(Rotation,X,Y,Z);
 
-			out_CamLoc = Location - 700 * X;
-			out_CamLoc.Z = Location.Z + 350;
+			out_CamLoc = Location - 1000 * X;
+			out_CamLoc.Z = Location.Z + 500;
 
 			out_CamRot.Yaw = Rotation.Yaw;
 			out_CamRot.Pitch = (-22.0f     *DegToRad) * RadToUnrRot;
@@ -417,6 +419,9 @@ simulated function PostBeginPlay()
 {
 	Super.PostBeginPlay();
 
+	//Cast the GameInfo object to MyGameInfo   
+	gameContext = SinisterGame(worldinfo.game);
+
 	if(SimObj.bAutoDrive)
 	{
 		SetDriving(true);
@@ -582,6 +587,24 @@ simulated function UnlockWheels()
 	Wheels[1].SuspensionTravel = Default.Wheels[1].SuspensionTravel;
 	SimCar.WheelSuspensionStiffness = SVehicleSimCar(Default.SimObj).WheelSuspensionStiffness;
 }
+
+simulated event CustomBoosters()
+{
+	`log("custom booster");
+	// play animation
+	BoosterBlend.AnimFire('boosters_out', true,,, 'boosters_out_idle');
+	// activate booster sound and effects
+	BoosterSound.Play();
+	if (VehicleEffects[0].EffectRef != none)
+	{
+		VehicleEffects[0].EffectRef.bJustAttached = TRUE;
+	}
+	if (VehicleEffects[1].EffectRef != none)
+	{
+		VehicleEffects[1].EffectRef.bJustAttached = TRUE;
+	}
+}
+
 /** ActivateRocketBoosters()
 called when player activates rocket boosters
 */
@@ -589,9 +612,7 @@ simulated event ActivateRocketBoosters()
 {
 	local CameraAnim UseCamAnim;
 
-	bSteeringLimited = true;
-
-	AirSpeed = Default.RocketSpeed;
+	AirSpeed = 1600;
 
 	if ( WorldInfo.NetMode == NM_DedicatedServer )
 		return;
@@ -627,13 +648,16 @@ simulated event ActivateRocketBoosters()
 		LeftBoosterLight.SetEnabled(TRUE);
 		RightBoosterLight.SetEnabled(TRUE);
 	}
-	LockWheels();
+	//LockWheels();
 
 	DefaultUprightMaxTorque = UDKVehicleSimCar(SimObj).InAirUprightMaxTorque;
 	DefaultUprightTorqueFactor = UDKVehicleSimCar(SimObj).InAirUprightTorqueFactor;
 
 	UDKVehicleSimCar(SimObj).InAirUprightMaxTorque = BoostUprightMaxTorque;
 	UDKVehicleSimCar(SimObj).InAirUprightTorqueFactor = BoostUprightTorqueFactor;
+
+	//screw locking the wheels
+	EnableFullSteering();
 }
 
 /** DeactivateHandbrake()
@@ -662,9 +686,17 @@ called when player deactivates rocket boosters or they run out
 simulated event DeactivateRocketBoosters()
 {
 	local UTPlayerController PC;
+	local SinisterPlayerTracker     pt;
+	local SinisterPlayerController  x;
+
+	foreach gameContext.TheSinisterPlayers(pt){
+		x = SinisterPlayerController ( self.Owner );
+		if (pt.c.PlayerNum == x.PlayerNum){
+			pt.DecreaseVehicleSpeed();
+		}
+	}
 
 	// Set handbrake to decrease the possibility of a rollover
-	AirSpeed = Default.AirSpeed;
 	EnableFullSteering();
 
 	if ( WorldInfo.NetMode == NM_DedicatedServer )
@@ -686,7 +718,7 @@ simulated event DeactivateRocketBoosters()
 	RightBoosterLight.SetEnabled(FALSE);
 	Mesh.DetachComponent(LeftBoosterLight);
 	Mesh.DetachComponent(RightBoosterLight);
-	UnlockWheels();
+	//UnlockWheels();
 
 	UDKVehicleSimCar(SimObj).InAirUprightMaxTorque = DefaultUprightMaxTorque;
 	UDKVehicleSimCar(SimObj).InAirUprightTorqueFactor = DefaultUprightTorqueFactor;
@@ -1284,16 +1316,18 @@ defaultproperties
 		WheelSuspensionDamping=3.0
 		WheelSuspensionBias=0.1
 		ChassisTorqueScale=0.0
-		MaxBrakeTorque=5.0
+		MaxBrakeTorque=25.0
 		StopThreshold=100
 
-		MaxSteerAngleCurve=(Points=((InVal=0,OutVal=45),(InVal=600.0,OutVal=15.0),(InVal=1100.0,OutVal=10.0),(InVal=1300.0,OutVal=6.0),(InVal=1600.0,OutVal=1.0)))
+		//MaxSteerAngleCurve=(Points=((InVal=0,OutVal=45),(InVal=600.0,OutVal=15.0),(InVal=1100.0,OutVal=10.0),(InVal=1300.0,OutVal=6.0),(InVal=1600.0,OutVal=1.0)))
+		//MaxSteerAngleCurve=(Points=((InVal=0,OutVal=25),(InVal=600.0,OutVal=20.0),(InVal=3100.0,OutVal=16.0),(InVal=4400.0,OutVal=12.0),(InVal=5000.0,OutVal=9.0)))
+		MaxSteerAngleCurve=(Points=((InVal=0,OutVal=35),(InVal=600.0,OutVal=15.0),(InVal=2100.0,OutVal=12.0),(InVal=2000.0,OutVal=6.0),(InVal=2500.0,OutVal=3.0)))
 		SteerSpeed=110
 
 		LSDFactor=0.0
 		TorqueVSpeedCurve=(Points=((InVal=-600.0,OutVal=0.0),(InVal=-300.0,OutVal=80.0),(InVal=0.0,OutVal=130.0),(InVal=950.0,OutVal=130.0),(InVal=1050.0,OutVal=10.0),(InVal=1150.0,OutVal=0.0)))
 		EngineRPMCurve=(Points=((InVal=-500.0,OutVal=2500.0),(InVal=0.0,OutVal=500.0),(InVal=549.0,OutVal=3500.0),(InVal=550.0,OutVal=1000.0),(InVal=849.0,OutVal=4500.0),(InVal=850.0,OutVal=1500.0),(InVal=1100.0,OutVal=5000.0)))
-		EngineBrakeFactor=0.025
+		EngineBrakeFactor=0.005
 		ThrottleSpeed=0.2
 		WheelInertia=0.2
 		NumWheelsForFullSteering=4

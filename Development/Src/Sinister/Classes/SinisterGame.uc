@@ -38,7 +38,7 @@ function StartMatch(){
 	foreach WorldInfo.AllControllers(class'Controller', C){
 		pt = New class'SinisterPlayerTracker';
 		pt.c = C;
-		pt.terrainStack.AddItem("Road");
+		pt.terrainStack.AddItem("ROAD");
 		TheSinisterPlayers.AddItem(pt);
 	}
 }

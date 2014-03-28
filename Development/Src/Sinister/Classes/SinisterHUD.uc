@@ -5,7 +5,6 @@ var float DistanceFromY;
 var float WidthOfComponents;
 var SinisterGame gameContext;
 
-
 //Weapon Icons
 var CanvasIcon weaponNitrous;
 var CanvasIcon weaponMissile;
@@ -73,12 +72,14 @@ function BoxMinimap(float width, float height, float widthToStartAt, float heigh
 
 function BoxPositionalInformation(float width, float height, float widthToStartAt, float heightToStartAt){
 	local SinisterPlayerTracker     pt;
-	local String checkpointlog;
+	local String                    checkpointlog;
+	local UTVehicle_Sinister        vehicleAtHand;
 
 	checkpointlog = "";
 
 	foreach gameContext.TheSinisterPlayers(pt){
-		checkpointlog $= "Player" $ pt.c.PlayerNum $ "\n" $ pt.lastCheckpointPassed $ "/" $ gameContext.checkpointsPerLapCount $ " Checkpoints\nLap " $ (pt.lastLapCompleted + 1) $ "/" $ gameContext.lapCount $ "\n";
+		vehicleAtHand = UTVehicle_Sinister( pt.c.Pawn );
+		checkpointlog $= "Player" $ pt.c.PlayerNum $ "\n" $ pt.lastCheckpointPassed $ "/" $ gameContext.checkpointsPerLapCount $ " Checkpoints\nLap " $ (pt.lastLapCompleted + 1) $ "/" $ gameContext.lapCount $ "\n" $ "Speed: " $ int( VSize( vehicleAtHand.Velocity ) * 0.0681825 ) $ "Km/H \n" $ "Terrain Impact: " $ int( vehicleAtHand.AirSpeed );
 	}
 
 	DrawHUDBox(width, height, widthToStartAt, heightToStartAt);

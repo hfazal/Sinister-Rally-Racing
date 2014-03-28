@@ -3,8 +3,7 @@
  * Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.
  */
 
-class UTVehicleBoostPad extends Actor
-	ClassGroup(Vehicles)
+class SinisterBoostPad extends Actor
 	placeable;
 
 var()	bool						bInitiallyOn;
@@ -28,12 +27,16 @@ function Trigger( Actor Other, Pawn EventInstigator )
 event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vector HitNormal)
 {
 	local bool bFound;
-	local UTVehicle UTV;
+	local UTVehicle_Sinister UTV;
 
-	UTV = UTVehicle(Other);
+	UTV = UTVehicle_Sinister(Other);
 
 	if (UTV != None && bCurrentlyActive)
 	{
+		UTV.ActivateRocketBoosters();
+		UTV.bBoostersActivated = TRUE;
+		UTV.BoostStartTime = WorldInfo.TimeSeconds;
+
 		if (AffectedVehicles.Length > 0)
 			bFound = (AffectedVehicles.Find(UTV.Class) != -1);
 		else
@@ -56,9 +59,9 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 event UnTouch(Actor Other)
 {
 	local int Idx;
-	local UTVehicle UTV;
+	local UTVehicle_Sinister UTV;
 
-	UTV = UTVehicle(Other);
+	UTV = UTVehicle_Sinister(Other);
 
 	if (UTV != None)
 	{

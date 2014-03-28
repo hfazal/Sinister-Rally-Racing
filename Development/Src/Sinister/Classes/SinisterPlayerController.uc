@@ -27,7 +27,6 @@ exec function startSpeedBoost() {
 
 	local UTVehicle_Sinister vehicleAtHand;
 	local SinisterPlayerTracker     pt;
-	local vector BoostDir;
 	local vector hello;
 	local int adjustXBy;
 	local int adjustYBy;
@@ -43,17 +42,10 @@ exec function startSpeedBoost() {
                         break;
                     case 1:    //lets say this is the boost
                         //code for the boost
-                        vehicleAtHand.ActivateRocketBoosters(); //or whatever its called
-						BoostStartTime=worldInfo.TimeSeconds;
+                        vehicleAtHand.ActivateRocketBoosters();
+						vehicleAtHand.bBoostersActivated = TRUE;
+						vehicleAtHand.BoostStartTime = WorldInfo.TimeSeconds;
 
-						BoostDir = vector(Rotation);
-						if ( VSizeSq(Velocity) < BoostPowerSpeed*BoostPowerSpeed )
-						{
-							vehicleAtHand.AddForce( BoosterForceMagnitude * BoostDir );
-							
-						}
-						vehicleAtHand.AddForce(BoostDir * 0);
-						
 						pt.weaponChoice=0;
                         break;
                     case 2:    //lets say this is the missile
