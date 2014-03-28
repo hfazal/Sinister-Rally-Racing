@@ -28,7 +28,9 @@ event Touch( Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vect
 				pt.terrainStack.AddItem("WATER");
 
 				//reduce the speed of moving car by 200 units
-				pawnAtHand.AirSpeed = pawnAtHand.AirSpeed - 200;
+				pt.DecreaseVehicleSpeed();
+				
+				//pawnAtHand.AirSpeed = pawnAtHand.AirSpeed - 200;
 			}
 		}
 	}
@@ -60,7 +62,10 @@ event Untouch( Actor Other )
 						x = true;
 
 						//increase the speed of moving car by 200 units
-						pawnAtHand.AirSpeed = pawnAtHand.AirSpeed + 200;
+						pt.IncreaseVehicleSpeed("WATER");
+
+
+						//pawnAtHand.AirSpeed = pawnAtHand.AirSpeed + 200;
 					}
 				}
 			}
