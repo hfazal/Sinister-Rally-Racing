@@ -63,7 +63,7 @@ DefaultProperties
     bBlockActors=false
     
     Begin Object Class=CylinderComponent Name=CylinderComp
-        CollisionRadius=20
+        CollisionRadius=30
         CollisionHeight=48
         CollideActors=true        
         BlockActors=false
