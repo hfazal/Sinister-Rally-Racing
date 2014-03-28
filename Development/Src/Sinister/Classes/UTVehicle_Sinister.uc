@@ -1252,6 +1252,7 @@ function bool CriticalChargeAttack(UTBot B)
 	return (UTVehicle(B.Enemy) != None) && RecommendCharge(B, B.Enemy);
 }
 
+
 defaultproperties
 {
 	Health=300

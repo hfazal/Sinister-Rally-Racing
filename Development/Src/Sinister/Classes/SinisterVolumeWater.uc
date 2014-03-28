@@ -26,6 +26,9 @@ event Touch( Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vect
 		foreach gameContext.TheSinisterPlayers(pt){                                 // loop through all the SinisterPlayerTracker objects for the game
 			if (pt.c.PlayerNum == pawnAtHand.Controller.PlayerNum){   
 				pt.terrainStack.AddItem("WATER");
+
+				//reduce the speed of moving car by 200 units
+				pawnAtHand.AirSpeed = pawnAtHand.AirSpeed - 200;
 			}
 		}
 	}
@@ -55,6 +58,9 @@ event Untouch( Actor Other )
 					if ( pt.terrainStack[i] == "WATER" && x == false ){
 						pt.terrainStack.Remove(i, 1);
 						x = true;
+
+						//increase the speed of moving car by 200 units
+						pawnAtHand.AirSpeed = pawnAtHand.AirSpeed + 200;
 					}
 				}
 			}
