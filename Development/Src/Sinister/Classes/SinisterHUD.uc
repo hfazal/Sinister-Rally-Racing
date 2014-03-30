@@ -18,7 +18,7 @@ var SinisterMiniMap GameMinimap;
 var float TileSize;
 var int MapDim;
 var int BoxSize;
-var Color PlayerColors[2];
+var Color PlayerColors[3];
 
 simulated event PostBeginPlay()
 {
@@ -128,6 +128,10 @@ function DrawMap()
 	local LinearColor MapOffset;
 	local Float ActualMapRange;
 	local Controller C;
+	local MaterialInstanceConstant GameMinimapMIC;
+	local MaterialInstanceConstant GameCompassMIC;
+	local SinisterPlayerTracker     pt;
+	local SinisterCheckpoint checkpointAtHand;
 
 	//Set MapDim & BoxSize accounting for the current resolution 		
 	MapPosition.X = default.MapPosition.X * FullWidth;
@@ -183,15 +187,19 @@ function DrawMap()
 	//MapOffset.R =  FClamp(-1.0 * DisplayPlayerPos.X,-0.5,0.5);
 	//MapOffset.G =  FClamp(-1.0 * DisplayPlayerPos.Y,-0.5,0.5);
 
+	GameMinimapMIC = new(Outer) class'MaterialInstanceConstant';
+	GameMinimapMIC.SetParent( GameMinimap.Minimap );
+	GameCompassMIC = new(Outer) class'MaterialInstanceConstant';
+	GameCompassMIC.SetParent( GameMinimap.CompassOverlay );
 	//Set the material parameter values
-	GameMinimap.Minimap.SetScalarParameterValue('MapRotation',MapRotation);
-	GameMinimap.Minimap.SetScalarParameterValue('TileSize',TileSize);
-	GameMinimap.Minimap.SetVectorParameterValue('MapOffset',MapOffset);
-	GameMinimap.CompassOverlay.SetScalarParameterValue('CompassRotation',CompassRotation);
+	GameMinimapMIC.SetScalarParameterValue('MapRotation',MapRotation);
+	GameMinimapMIC.SetScalarParameterValue('TileSize',TileSize);
+	GameMinimapMIC.SetVectorParameterValue('MapOffset',MapOffset);
+	GameCompassMIC.SetScalarParameterValue('CompassRotation',CompassRotation);
 
 	//Draw the map
 	Canvas.SetPos(MapPosition.X,MapPosition.Y);
-	Canvas.DrawMaterialTile(GameMinimap.Minimap,MapDim,MapDim,StartPos.X,StartPos.Y,TileSize,TileSize);
+	Canvas.DrawMaterialTile(GameMinimapMIC,MapDim,MapDim,StartPos.X,StartPos.Y,TileSize,TileSize);
 
 	//Draw the player's location
 	Canvas.SetPos(	MapPosition.X + MapDim * (((DisplayPlayerPos.X + 0.5) - StartPos.X) / TileSize) - (BoxSize / 2),
@@ -232,9 +240,46 @@ function DrawMap()
 		}
 	}
 
+	/*****************************
+	*  Draw Next Checkpoint (I cant believe I'm doing this.....)
+	*****************************/
+
+	foreach gameContext.TheSinisterPlayers(pt)
+	{
+		if (PlayerController(pt.c) == PlayerOwner)
+		{
+			foreach gameContext.TheSinisterCheckpoints(checkpointAtHand)
+			{
+				if (checkpointAtHand.CheckpointOrder == pt.lastCheckpointPassed+1){
+					//Calculate normalized player position
+					PlayerPos.Y = (GameMinimap.MapCenter.X - checkpointAtHand.Location.X) / ActualMapRange;
+					PlayerPos.X = (checkpointAtHand.Location.Y - GameMinimap.MapCenter.Y) / ActualMapRange;
+
+					//Calculate position for displaying the player in the map
+					DisplayPlayerPos.X = VSize(PlayerPos) * Cos( ATan2(PlayerPos.Y, PlayerPos.X) - MapRotation);
+					DisplayPlayerPos.Y = VSize(PlayerPos) * Sin( ATan2(PlayerPos.Y, PlayerPos.X) - MapRotation);
+
+					if(VSize(DisplayPlayerPos - RotPlayerPos) <= ((TileSize / 2.0) - (TileSize * Sqrt(2 * Square(BoxSize / 2)) / MapDim)))
+					{
+						//Draw the player's location
+						Canvas.SetPos(	MapPosition.X + MapDim * (((DisplayPlayerPos.X + 0.5) - StartPos.X) / TileSize) - (BoxSize / 2),
+									MapPosition.Y + MapDim * (((DisplayPlayerPos.Y + 0.5) - StartPos.Y) / TileSize) - (BoxSize / 2));
+						Canvas.SetDrawColor(PlayerColors[2].R,
+										PlayerColors[2].G,
+										PlayerColors[2].B,
+										PlayerColors[2].A);
+						Canvas.DrawBox(BoxSize,BoxSize);
+					}
+					break;
+				}
+			}
+			break;
+		}
+	}
+
 	//Draw the compass overlay
 	Canvas.SetPos(MapPosition.X,MapPosition.Y);
-	Canvas.DrawMaterialTile(GameMinimap.CompassOverlay,MapDim,MapDim,0.0,0.0,1.0,1.0);
+	Canvas.DrawMaterialTile(GameCompassMIC,MapDim,MapDim,0.0,0.0,1.0,1.0);
 }
 
 function BoxPositionalInformation(float width, float height, float widthToStartAt, float heightToStartAt){
@@ -278,6 +323,7 @@ DefaultProperties
 	BoxSize=12
 	PlayerColors(0)=(R=255,G=255,B=255,A=255)
 	PlayerColors(1)=(R=255,G=0,B=0,A=255)
+	PlayerColors(2)=(R=255,G=140,B=0,A=255)
 	TileSize=0.4
 	MapPosition=(X=0.000000,Y=0.000000)
 }

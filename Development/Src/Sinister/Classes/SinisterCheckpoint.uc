@@ -45,7 +45,7 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 						pt.lastCheckpointPassed += 1;                                   // add one to the player's count	
 					}
 					pt.lastCheckinTime = WorldInfo.TimeSeconds;
-					gameContext.onlyDisplayCheckpoint(CheckpointOrder+1);           // hide/show the correct checkpoints
+					gameContext.onlyDisplayCheckpoint(pt.lastCheckpointPassed+1);           // hide/show the correct checkpoints
 				}
 			}
 		}
