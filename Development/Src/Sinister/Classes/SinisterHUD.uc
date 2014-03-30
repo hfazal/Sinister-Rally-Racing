@@ -19,6 +19,11 @@ var float TileSize;
 var int MapDim;
 var int BoxSize;
 var Color PlayerColors[3];
+var CanvasIcon minimapCar;
+var CanvasIcon minimapAICar;
+var CanvasIcon minimapCheckpoint;
+
+var Font newfont;
 
 simulated event PostBeginPlay()
 {
@@ -101,17 +106,17 @@ function DrawGameHud()
 					case 1:
 						//Nitrous
 						Canvas.DrawIcon(weaponNitrous, 40, Canvas.ClipY-20-148, 0.5);
-						DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
+						//DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
 					break;
 					case 2:
 						//Missile
 						Canvas.DrawIcon(weaponMissile, 40, Canvas.ClipY-20-148, 0.5);
-						DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
+						//DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
 					break;
 					case 3:
 						//Mine
 						Canvas.DrawIcon(weaponMine, 40, Canvas.ClipY-20-148, 0.5);
-						DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
+						//DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
 					break;
 					default:
 				}
@@ -202,13 +207,10 @@ function DrawMap()
 	Canvas.DrawMaterialTile(GameMinimapMIC,MapDim,MapDim,StartPos.X,StartPos.Y,TileSize,TileSize);
 
 	//Draw the player's location
-	Canvas.SetPos(	MapPosition.X + MapDim * (((DisplayPlayerPos.X + 0.5) - StartPos.X) / TileSize) - (BoxSize / 2),
-				MapPosition.Y + MapDim * (((DisplayPlayerPos.Y + 0.5) - StartPos.Y) / TileSize) - (BoxSize / 2));
-	Canvas.SetDrawColor(PlayerColors[0].R,
-					PlayerColors[0].G,
-					PlayerColors[0].B,
-					PlayerColors[0].A);
-	Canvas.DrawBox(BoxSize,BoxSize);
+	Canvas.DrawIcon(minimapCar,
+					MapPosition.X + MapDim * (((DisplayPlayerPos.X + 0.5) - StartPos.X) / TileSize) - (BoxSize / 2),
+					MapPosition.Y + MapDim * (((DisplayPlayerPos.Y + 0.5) - StartPos.Y) / TileSize) - (BoxSize / 2),
+					1.0);
 	
 	/*****************************
 	*  Draw Other Players
@@ -229,13 +231,10 @@ function DrawMap()
 			if(VSize(DisplayPlayerPos - RotPlayerPos) <= ((TileSize / 2.0) - (TileSize * Sqrt(2 * Square(BoxSize / 2)) / MapDim)))
 			{
 				//Draw the player's location
-				Canvas.SetPos(	MapPosition.X + MapDim * (((DisplayPlayerPos.X + 0.5) - StartPos.X) / TileSize) - (BoxSize / 2),
-							MapPosition.Y + MapDim * (((DisplayPlayerPos.Y + 0.5) - StartPos.Y) / TileSize) - (BoxSize / 2));
-				Canvas.SetDrawColor(PlayerColors[1].R,
-								PlayerColors[1].G,
-								PlayerColors[1].B,
-								PlayerColors[1].A);
-				Canvas.DrawBox(BoxSize,BoxSize);
+				Canvas.DrawIcon(minimapAICar,
+					MapPosition.X + MapDim * (((DisplayPlayerPos.X + 0.5) - StartPos.X) / TileSize) - (BoxSize / 2),
+					MapPosition.Y + MapDim * (((DisplayPlayerPos.Y + 0.5) - StartPos.Y) / TileSize) - (BoxSize / 2),
+					1.0);
 			}
 		}
 	}
@@ -262,13 +261,10 @@ function DrawMap()
 					if(VSize(DisplayPlayerPos - RotPlayerPos) <= ((TileSize / 2.0) - (TileSize * Sqrt(2 * Square(BoxSize / 2)) / MapDim)))
 					{
 						//Draw the player's location
-						Canvas.SetPos(	MapPosition.X + MapDim * (((DisplayPlayerPos.X + 0.5) - StartPos.X) / TileSize) - (BoxSize / 2),
-									MapPosition.Y + MapDim * (((DisplayPlayerPos.Y + 0.5) - StartPos.Y) / TileSize) - (BoxSize / 2));
-						Canvas.SetDrawColor(PlayerColors[2].R,
-										PlayerColors[2].G,
-										PlayerColors[2].B,
-										PlayerColors[2].A);
-						Canvas.DrawBox(BoxSize,BoxSize);
+						Canvas.DrawIcon(minimapCheckpoint,
+										MapPosition.X + MapDim * (((DisplayPlayerPos.X + 0.5) - StartPos.X) / TileSize) - (BoxSize / 2),
+										MapPosition.Y + MapDim * (((DisplayPlayerPos.Y + 0.5) - StartPos.Y) / TileSize) - (BoxSize / 2),
+										1.0);
 					}
 					break;
 				}
@@ -315,6 +311,9 @@ function DrawHUDBox(float width, float height, float widthToStartAt, float heigh
 
 DefaultProperties
 {
+	minimapCar = (Texture=Texture2D'team2package.HUD.goodcar')
+	minimapAICar = (Texture=Texture2D'team2package.HUD.evilcar')
+	minimapCheckpoint = (Texture=Texture2D'team2package.HUD.Checkpoint')
 	weaponNitrous = (Texture=Texture2D'team2package.HUD.nitrousIcon')
 	weaponMissile = (Texture=Texture2D'team2package.HUD.missileIcon')
 	weaponMine = (Texture=Texture2D'team2package.HUD.mineIcon')
