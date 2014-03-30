@@ -11,7 +11,7 @@ event PostBeginPlay()
    gameContext = SinisterGame(worldinfo.game);
 }
 
-event SetInitialState(){
+simulated event SetInitialState(){
 	`log(self.Location.Z $ " : THE HEIGHT");
 }
 

@@ -10,64 +10,231 @@ var CanvasIcon weaponNitrous;
 var CanvasIcon weaponMissile;
 var CanvasIcon weaponMine;
 
-event PostBeginPlay()
+//Start Countdown
+var int countdown;
+
+//Minimap
+var SinisterMiniMap GameMinimap;
+var float TileSize;
+var int MapDim;
+var int BoxSize;
+var Color PlayerColors[2];
+
+simulated event PostBeginPlay()
 {
-   Super.PostBeginPlay();
+	//local PlayerController c;
+	//local SinisterPlayerTracker pt;
+
+	Super.PostBeginPlay();
 
 	//Cast the GameInfo object to MyGameInfo   
 	gameContext = SinisterGame(worldinfo.game);
+
+	//Initialize minimap
+	GameMinimap = gameContext.GameMinimap;
+
+	//PAUSE GAME for countdown
+	SetTimer(1);
+}
+
+simulated function Timer()
+{    
+	if (countdown >= 0){
+		countdown--;
+		SetTimer(1);
+	}
+	else {
+		countdown--;
+		//UNPAUSE GAME for end of countdown
+	}
+}
+
+function DrawHUD(){
+	super.DrawHUD();
+
+	DrawMap();
+}
+
+function float GetPlayerHeading()
+{
+	local Vector v;
+	local Rotator r;
+	local float f;
+
+	r.Yaw = PlayerOwner.Pawn.Rotation.Yaw;
+	v = vector(r);
+	f = GetHeadingAngle(v);
+	f = UnwindHeading(f);
+
+	while (f < 0){
+		f += PI * 2.0f;
+	}
+
+	return f;
 }
 
 function DrawGameHud()
 {
 	local SinisterPlayerTracker     pt;
 
-	//HUD should always be 25% of width
-	WidthOfComponents = Canvas.ClipX * 0.25;
-	DistanceFromX = Canvas.ClipX - WidthOfComponents - 10;
+	if (countdown > 0){
+		WriteText(String( countdown ), class'Engine'.static.GetLargeFont(), Canvas.ClipX / 2, Canvas.ClipY / 2);
+	}
+	else if (countdown == 0) {
+		WriteText("GO", class'Engine'.static.GetLargeFont(), Canvas.ClipX / 2, Canvas.ClipY / 2);
+	}
+	else {
+		//HUD should always be 25% of width
+		WidthOfComponents = Canvas.ClipX * 0.25;
+		DistanceFromX = Canvas.ClipX - WidthOfComponents - 10;
 
-	//Draw Minimap
-    BoxMinimap(WidthOfComponents, 200.00, DistanceFromX, Canvas.ClipY - 210);
+		//Draw Positional Information
+		BoxPositionalInformation(WidthOfComponents, 200.00, DistanceFromX, 10);
 
-	//Draw Positional Information
-	BoxPositionalInformation(WidthOfComponents, 200.00, DistanceFromX, 10);
-
-	//Draw Weapon box if Neccessary
-	foreach gameContext.TheSinisterPlayers(pt){
-		if (pt.c.PlayerNum == self.PlayerOwner.PlayerNum){
-			switch (pt.weaponChoice) {
-				case 0:
-					//no weapon
-				break;
-				case 1:
-					//Nitrous
-					Canvas.DrawIcon(weaponNitrous, 40, 40, 0.5);
-					DrawHUDBox(148, 148, 30, 30);
-				break;
-				case 2:
-					//Missile
-					Canvas.DrawIcon(weaponMissile, 40, 40, 0.5);
-					DrawHUDBox(148, 148, 30, 30);
-				break;
-				case 3:
-					//Mine
-					Canvas.DrawIcon(weaponMine, 40, 40, 0.5);
-					DrawHUDBox(148, 148, 30, 30);
-				break;
-				default:
+		//Draw Weapon box if Neccessary
+		foreach gameContext.TheSinisterPlayers(pt){
+			if (pt.c.PlayerNum == self.PlayerOwner.PlayerNum){
+				switch (pt.weaponChoice) {
+					case 0:
+						//no weapon
+					break;
+					case 1:
+						//Nitrous
+						Canvas.DrawIcon(weaponNitrous, 40, Canvas.ClipY-20-148, 0.5);
+						DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
+					break;
+					case 2:
+						//Missile
+						Canvas.DrawIcon(weaponMissile, 40, Canvas.ClipY-20-148, 0.5);
+						DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
+					break;
+					case 3:
+						//Mine
+						Canvas.DrawIcon(weaponMine, 40, Canvas.ClipY-20-148, 0.5);
+						DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
+					break;
+					default:
+				}
 			}
 		}
 	}
 }
 
-function BoxMinimap(float width, float height, float widthToStartAt, float heightToStartAt){
-	local String checkpointlog;
+function DrawMap()
+{
+	local Float TrueNorth,PlayerHeading;
+	local Float MapRotation,CompassRotation;
+	local Vector PlayerPos, ClampedPlayerPos, RotPlayerPos, DisplayPlayerPos, StartPos;
+	local LinearColor MapOffset;
+	local Float ActualMapRange;
+	local Controller C;
 
-	checkpointlog = "minimap will go here";
+	//Set MapDim & BoxSize accounting for the current resolution 		
+	MapPosition.X = default.MapPosition.X * FullWidth;
+	MapPosition.Y = default.MapPosition.Y * FullHeight;
+	MapDim = default.MapDim * ResolutionScale;
+	BoxSize = default.BoxSize * ResolutionScale;
 
-	DrawHUDBox(width, height, widthToStartAt, heightToStartAt);
+	//Calculate map range values
+	ActualMapRange = FMax(	GameMinimap.MapRangeMax.X - GameMinimap.MapRangeMin.X,
+						GameMinimap.MapRangeMax.Y - GameMinimap.MapRangeMin.Y);
 
-	WriteText(checkpointlog, class'Engine'.static.GetLargeFont(), widthToStartAt, heightToStartAt);
+	//Calculate normalized player position
+	PlayerPos.X = (PlayerOwner.Pawn.Location.Y - GameMinimap.MapCenter.Y) / ActualMapRange;
+	PlayerPos.Y = (GameMinimap.MapCenter.X - PlayerOwner.Pawn.Location.X) / ActualMapRange;
+
+	//Calculate clamped player position
+	ClampedPlayerPos.X = FClamp(PlayerPos.X,-0.5 + (TileSize / 2.0),0.5 - (TileSize / 2.0));
+	ClampedPlayerPos.Y = FClamp(PlayerPos.Y,-0.5 + (TileSize / 2.0),0.5 - (TileSize / 2.0));
+
+	//Get north direction and player's heading
+	TrueNorth = GameMinimap.GetRadianHeading();
+	Playerheading = GetPlayerHeading();
+
+	//Calculate rotation values
+	if(GameMinimap.bForwardAlwaysUp)
+	{
+		MapRotation = PlayerHeading;
+		CompassRotation = PlayerHeading - TrueNorth;
+	}
+	else
+	{
+		MapRotation = PlayerHeading - TrueNorth;
+		CompassRotation = MapRotation;
+	}
+
+	//Calculate position for displaying the player in the map
+	DisplayPlayerPos.X = VSize(PlayerPos) * Cos( ATan2(PlayerPos.Y, PlayerPos.X) - MapRotation);
+	DisplayPlayerPos.Y = VSize(PlayerPos) * Sin( ATan2(PlayerPos.Y, PlayerPos.X) - MapRotation);
+
+	//Calculate player location after rotation
+	RotPlayerPos.X = VSize(ClampedPlayerPos) * Cos( ATan2(ClampedPlayerPos.Y, ClampedPlayerPos.X) - MapRotation);
+	RotPlayerPos.Y = VSize(ClampedPlayerPos) * Sin( ATan2(ClampedPlayerPos.Y, ClampedPlayerPos.X) - MapRotation);
+
+	//Calculate upper left UV coordinate
+	StartPos.X = FClamp(RotPlayerPos.X + (0.5 - (TileSize / 2.0)),0.0,1.0 - TileSize);
+	StartPos.Y = FClamp(RotPlayerPos.Y + (0.5 - (TileSize / 2.0)),0.0,1.0 - TileSize);
+	//StartPos.X = FClamp(DisplayPlayerPos.X + (0.5 - (TileSize / 2.0)),TileSize/-2,1.0 - TileSize/2);
+	//StartPos.Y = FClamp(DisplayPlayerPos.Y + (0.5 - (TileSize / 2.0)),TileSize/-2,1.0 - TileSize/2);
+
+	//Calculate texture panning for alpha
+	MapOffset.R =  FClamp(-1.0 * RotPlayerPos.X,-0.5 + (TileSize / 2.0),0.5 - (TileSize / 2.0));
+	MapOffset.G =  FClamp(-1.0 * RotPlayerPos.Y,-0.5 + (TileSize / 2.0),0.5 - (TileSize / 2.0));
+	//MapOffset.R =  FClamp(-1.0 * DisplayPlayerPos.X,-0.5,0.5);
+	//MapOffset.G =  FClamp(-1.0 * DisplayPlayerPos.Y,-0.5,0.5);
+
+	//Set the material parameter values
+	GameMinimap.Minimap.SetScalarParameterValue('MapRotation',MapRotation);
+	GameMinimap.Minimap.SetScalarParameterValue('TileSize',TileSize);
+	GameMinimap.Minimap.SetVectorParameterValue('MapOffset',MapOffset);
+	GameMinimap.CompassOverlay.SetScalarParameterValue('CompassRotation',CompassRotation);
+
+	//Draw the map
+	Canvas.SetPos(MapPosition.X,MapPosition.Y);
+	Canvas.DrawMaterialTile(GameMinimap.Minimap,MapDim,MapDim,StartPos.X,StartPos.Y,TileSize,TileSize);
+
+	//Draw the player's location
+	Canvas.SetPos(	MapPosition.X + MapDim * (((DisplayPlayerPos.X + 0.5) - StartPos.X) / TileSize) - (BoxSize / 2),
+				MapPosition.Y + MapDim * (((DisplayPlayerPos.Y + 0.5) - StartPos.Y) / TileSize) - (BoxSize / 2));
+	Canvas.SetDrawColor(PlayerColors[0].R,
+					PlayerColors[0].G,
+					PlayerColors[0].B,
+					PlayerColors[0].A);
+	Canvas.DrawBox(BoxSize,BoxSize);
+	
+	/*****************************
+	*  Draw Other Players
+	*****************************/
+
+	foreach WorldInfo.AllControllers(class'Controller',C)
+	{
+		if(PlayerController(C) != PlayerOwner)
+		{
+			//Calculate normalized player position
+			PlayerPos.Y = (GameMinimap.MapCenter.X - C.Pawn.Location.X) / ActualMapRange;
+			PlayerPos.X = (C.Pawn.Location.Y - GameMinimap.MapCenter.Y) / ActualMapRange;
+
+			//Calculate position for displaying the player in the map
+			DisplayPlayerPos.X = VSize(PlayerPos) * Cos( ATan2(PlayerPos.Y, PlayerPos.X) - MapRotation);
+			DisplayPlayerPos.Y = VSize(PlayerPos) * Sin( ATan2(PlayerPos.Y, PlayerPos.X) - MapRotation);
+
+			if(VSize(DisplayPlayerPos - RotPlayerPos) <= ((TileSize / 2.0) - (TileSize * Sqrt(2 * Square(BoxSize / 2)) / MapDim)))
+			{
+				//Draw the player's location
+				Canvas.SetPos(	MapPosition.X + MapDim * (((DisplayPlayerPos.X + 0.5) - StartPos.X) / TileSize) - (BoxSize / 2),
+							MapPosition.Y + MapDim * (((DisplayPlayerPos.Y + 0.5) - StartPos.Y) / TileSize) - (BoxSize / 2));
+				Canvas.SetDrawColor(PlayerColors[1].R,
+								PlayerColors[1].G,
+								PlayerColors[1].B,
+								PlayerColors[1].A);
+				Canvas.DrawBox(BoxSize,BoxSize);
+			}
+		}
+	}
+
+	//Draw the compass overlay
+	Canvas.SetPos(MapPosition.X,MapPosition.Y);
+	Canvas.DrawMaterialTile(GameMinimap.CompassOverlay,MapDim,MapDim,0.0,0.0,1.0,1.0);
 }
 
 function BoxPositionalInformation(float width, float height, float widthToStartAt, float heightToStartAt){
@@ -103,8 +270,14 @@ function DrawHUDBox(float width, float height, float widthToStartAt, float heigh
 
 DefaultProperties
 {
-	//bNoCrosshair = true;
 	weaponNitrous = (Texture=Texture2D'team2package.HUD.nitrousIcon')
 	weaponMissile = (Texture=Texture2D'team2package.HUD.missileIcon')
 	weaponMine = (Texture=Texture2D'team2package.HUD.mineIcon')
+	countdown = 3
+	MapDim=256
+	BoxSize=12
+	PlayerColors(0)=(R=255,G=255,B=255,A=255)
+	PlayerColors(1)=(R=255,G=0,B=0,A=255)
+	TileSize=0.4
+	MapPosition=(X=0.000000,Y=0.000000)
 }

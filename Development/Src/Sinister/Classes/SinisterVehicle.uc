@@ -4,7 +4,7 @@ class SinisterVehicle extends UTVehicle_Scorpion
 var SinisterGame gameContext;
 
 
-event PostBeginPlay()
+simulated event PostBeginPlay()
 {
  Super.PostBeginPlay();
  

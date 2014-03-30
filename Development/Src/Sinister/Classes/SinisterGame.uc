@@ -13,6 +13,7 @@ var array<SinisterPlayerTracker> TheSinisterPlayers;
 var array<SinisterCheckpoint> TheSinisterCheckpoints;
 var() int lapCount;                                     // defaulted to 2, in future will be alterable via main menu
 const checkpointsPerLapCount = 19;                      // one lap is 19
+var SinisterMiniMap GameMinimap;
 
 event Tick(float DeltaTime){
 	local SinisterPlayerTracker     pt;
@@ -26,6 +27,20 @@ event Tick(float DeltaTime){
 			bGameEnded = true;
 		}
 	}
+}
+
+function InitGame( string Options, out string ErrorMessage )
+{
+	local SinisterMiniMap minimap;
+
+	Super.InitGame(Options,ErrorMessage);
+
+	foreach AllActors(class'SinisterMiniMap',minimap)
+	{
+	   GameMinimap = minimap;
+	   break;
+	}
+
 }
 
 function StartMatch(){
@@ -71,4 +86,5 @@ DefaultProperties
 	bUseClassicHUD=true
 	bDelayedStart=false
 	lapCount=2
+	MapPrefixes(0)="COM"
 }
