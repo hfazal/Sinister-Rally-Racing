@@ -22,18 +22,18 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 	//That controller has a PlayerNum, which will be used to identify how far along they are
 
 	local Pawn                      pawnAtHand;
+	local UTVehicle_Sinister           vehicleAtHand;
 
 	Super.Touch(Other, OtherComp, HitLocation, HitNormal);
 
 	pawnAtHand = Pawn( Other );   //attempt to cast the actor that touched 
-//	sinisterowner = SinisterPlayerOwner( self.Owner );	
+	vehicleAtHand = UTVehicle_Sinister( Other );
 
-	if(pawnAtHand != None)
+	if(vehicleAtHand != None)
 	{	
 		pawnAtHand.Suicide();
+		self.Destroy(); 
 	}
-
-	self.Destroy();
 } 
 
 DefaultProperties

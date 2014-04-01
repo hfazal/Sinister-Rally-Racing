@@ -50,5 +50,5 @@ DefaultProperties
 	lastCheckinTime = 0;
 	lastCheckpointPassed = 0;
 	lastLapCompleted = 0;
-	weaponChoice=0;
+	weaponChoice = 0;
 }

@@ -20,21 +20,19 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 	local Pawn                      pawnAtHand;
 	local SinisterPlayerTracker     pt;
 	local int                       status;
-	//local int                       i;
-	//local UTVehicle_Scorpion vehicleAtHand;
 
 	Super.Touch(Other, OtherComp, HitLocation, HitNormal);
 
 	pawnAtHand = Pawn( Other );   //attempt to cast the actor that touched 
 
-	if(pawnAtHand != None)
+	if(pawnAtHand != None && bHidden == false)
 	{	
 		foreach gameContext.TheSinisterPlayers(pt){
 			if (pt.c.PlayerNum == pawnAtHand.Controller.PlayerNum && pt.weaponChoice==0){
 					status=int(RandRange(1,4));
-                   `log( "ran gen " $ status);
-				    setHidden(true);
-				    setHidden(false);
+				    self.SetHidden(true);
+					
+					SetTimer(3);
 				
 					switch(status) {
 						case 1: 
@@ -54,6 +52,10 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 		}
 	}
 } 
+
+function Timer(){
+	self.setHidden(false);
+}
 
 DefaultProperties
 {
