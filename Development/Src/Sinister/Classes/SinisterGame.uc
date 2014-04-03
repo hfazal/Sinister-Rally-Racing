@@ -32,6 +32,8 @@ event Tick(float DeltaTime){
 function InitGame( string Options, out string ErrorMessage )
 {
 	local SinisterMiniMap minimap;
+	local Controller C;
+	local SinisterPlayerTracker pt;
 
 	Super.InitGame(Options,ErrorMessage);
 
@@ -40,7 +42,6 @@ function InitGame( string Options, out string ErrorMessage )
 	   GameMinimap = minimap;
 	   break;
 	}
-
 }
 
 function StartMatch(){
@@ -50,7 +51,8 @@ function StartMatch(){
 	super.StartMatch();
 
 	//Build Array of SinisterPlayerTrackers
-	foreach WorldInfo.AllControllers(class'Controller', C){
+	//only adds local player
+	foreach AllActors(class'Controller', C){
 		pt = New class'SinisterPlayerTracker';
 		pt.c = C;
 		pt.terrainStack.AddItem("ROAD");

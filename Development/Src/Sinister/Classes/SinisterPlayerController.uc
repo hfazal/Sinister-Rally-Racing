@@ -59,8 +59,10 @@ exec function startSpeedBoost() {
 
 	local UTVehicle_Sinister vehicleAtHand;
 	local SinisterPlayerTracker     pt;
+	local SinisterPlayerTracker     pt2;
 	local int adjustXBy;
 	local int adjustYBy;
+	local SinisterHomingMissile x;
 
 	foreach gameContext.TheSinisterPlayers(pt){
 		if (self.PlayerNum == pt.c.PlayerNum){
@@ -81,7 +83,19 @@ exec function startSpeedBoost() {
 					break;
 				case 2:    //lets say this is the missile
 					//code for the missile
-					
+					hello.X=vehicleAtHand.Location.X;
+					hello.Y=vehicleAtHand.Location.Y;
+					hello.Z=vehicleAtHand.Location.Z + 150.00;
+
+					x = Spawn(class'SinisterHomingMissile',,,hello);
+					foreach gameContext.TheSinisterPlayers(pt2){
+						if (self.PlayerNum != pt2.c.PlayerNum){
+							x.target = pt2;
+						}
+					}
+					`log("Original " $ x.Location.X $ " + " $ x.Location.Y $ " + " $ x.Location.Z );
+					`log("Target " $ x.target.c.Location.X $ " + " $ x.target.c.Location.Y $ " + " $ x.target.c.Location.Z );
+
 					pt.weaponChoice=0;
 					break;
 				case 3:    //lets say this is the bear trap
