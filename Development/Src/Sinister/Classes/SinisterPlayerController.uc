@@ -24,6 +24,37 @@ simulated event PostBeginPlay(){
    gameContext = SinisterGame(worldinfo.game);
 }
 
+exec function respawnSinisterPlayer(){
+	local int checkpointToSpawnAt;
+	local Vector locationToSpawnAt;
+	local SinisterPlayerTracker     pt;
+	local SinisterPlayerTracker     persistantpt;
+	local SinisterCheckpoint pc;
+	local UTVehicle_Sinister           vehicleAtHand;
+
+	`log("printing r");
+
+	vehicleAtHand = UTVehicle_Sinister( self.Pawn );
+
+	foreach gameContext.TheSinisterCheckpoints(pc){
+		if (checkpointToSpawnAt == pc.CheckpointOrder){
+			locationToSpawnAt = pc.Location;
+			break;
+		}
+	}
+
+	foreach gameContext.TheSinisterPlayers(pt){
+		if (self.PlayerNum == pt.c.PlayerNum){
+			checkpointToSpawnAt = pt.lastCheckpointPassed;
+
+			gameContext.RestartPlayer(pt.c);
+			pt.c.SetLocation(locationToSpawnAt);
+
+			//break;
+		}
+	}	
+}
+
 exec function startSpeedBoost() {
 
 	local UTVehicle_Sinister vehicleAtHand;
