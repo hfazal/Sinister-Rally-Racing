@@ -80,7 +80,6 @@ function onlyDisplayCheckpoint(int checkpointToMakeVisible){
 DefaultProperties
 {
 	PlayerControllerClass=class'Sinister.SinisterPlayerController'
-	//AIControllerClass=class'Sinister.SinisterAIController'
 	DefaultPawnClass=class'Sinister.SinisterPawn'
 	HUDType=class'Sinister.SinisterHUD'
 	bUseClassicHUD=true
