@@ -28,6 +28,7 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 
 	local Pawn                      pawnAtHand;
 	local SinisterPlayerTracker     pt;
+	local SinisterPlayerController  pc;
 
 	Super.Touch(Other, OtherComp, HitLocation, HitNormal);
 
@@ -45,7 +46,12 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 						pt.lastCheckpointPassed += 1;                                   // add one to the player's count	
 					}
 					pt.lastCheckinTime = WorldInfo.TimeSeconds;
-					gameContext.onlyDisplayCheckpoint(pt.lastCheckpointPassed+1);           // hide/show the correct checkpoints
+
+					pc = SinisterPlayerController( pt.c );
+					if (pc != None){
+						//human
+						gameContext.onlyDisplayCheckpoint(pt.lastCheckpointPassed+1);           // hide/show the correct checkpoints
+					}
 				}
 			}
 		}

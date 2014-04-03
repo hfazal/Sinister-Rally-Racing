@@ -23,6 +23,7 @@ simulated function PostBeginPlay()
 	pt = New class'SinisterPlayerTracker';
 	pt.c = self;
 	pt.terrainStack.AddItem("ROAD");
+	pt.human = false;
 	gameContext.TheSinisterPlayers.AddItem(pt);
 }
 

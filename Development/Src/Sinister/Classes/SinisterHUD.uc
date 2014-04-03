@@ -37,21 +37,6 @@ simulated event PostBeginPlay()
 
 	//Initialize minimap
 	GameMinimap = gameContext.GameMinimap;
-
-	//PAUSE GAME for countdown
-	SetTimer(1);
-}
-
-simulated function Timer()
-{    
-	if (countdown >= 0){
-		countdown--;
-		SetTimer(1);
-	}
-	else {
-		countdown--;
-		//UNPAUSE GAME for end of countdown
-	}
 }
 
 function DrawHUD(){
@@ -82,44 +67,36 @@ function DrawGameHud()
 {
 	local SinisterPlayerTracker     pt;
 
-	if (countdown > 0){
-		WriteText(String( countdown ), class'Engine'.static.GetLargeFont(), Canvas.ClipX / 2, Canvas.ClipY / 2);
-	}
-	else if (countdown == 0) {
-		WriteText("GO", class'Engine'.static.GetLargeFont(), Canvas.ClipX / 2, Canvas.ClipY / 2);
-	}
-	else {
-		//HUD should always be 25% of width
-		WidthOfComponents = Canvas.ClipX * 0.25;
-		DistanceFromX = Canvas.ClipX - WidthOfComponents - 10;
+	//HUD should always be 25% of width
+	WidthOfComponents = Canvas.ClipX * 0.25;
+	DistanceFromX = Canvas.ClipX - WidthOfComponents - 10;
 
-		//Draw Positional Information
-		BoxPositionalInformation(WidthOfComponents, 200.00, DistanceFromX, 10);
+	//Draw Positional Information
+	BoxPositionalInformation(WidthOfComponents, 250.00, DistanceFromX, 10);
 
-		//Draw Weapon box if Neccessary
-		foreach gameContext.TheSinisterPlayers(pt){
-			if (pt.c.PlayerNum == self.PlayerOwner.PlayerNum){
-				switch (pt.weaponChoice) {
-					case 0:
-						//no weapon
-					break;
-					case 1:
-						//Nitrous
-						Canvas.DrawIcon(weaponNitrous, 40, Canvas.ClipY-20-148, 0.5);
-						//DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
-					break;
-					case 2:
-						//Missile
-						Canvas.DrawIcon(weaponMissile, 40, Canvas.ClipY-20-148, 0.5);
-						//DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
-					break;
-					case 3:
-						//Mine
-						Canvas.DrawIcon(weaponMine, 40, Canvas.ClipY-20-148, 0.5);
-						//DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
-					break;
-					default:
-				}
+	//Draw Weapon box if Neccessary
+	foreach gameContext.TheSinisterPlayers(pt){
+		if (pt.c.PlayerNum == self.PlayerOwner.PlayerNum){
+			switch (pt.weaponChoice) {
+				case 0:
+					//no weapon
+				break;
+				case 1:
+					//Nitrous
+					Canvas.DrawIcon(weaponNitrous, 40, Canvas.ClipY-20-148, 0.5);
+					//DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
+				break;
+				case 2:
+					//Missile
+					Canvas.DrawIcon(weaponMissile, 40, Canvas.ClipY-20-148, 0.5);
+					//DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
+				break;
+				case 3:
+					//Mine
+					Canvas.DrawIcon(weaponMine, 40, Canvas.ClipY-20-148, 0.5);
+					//DrawHUDBox(148, 148, 30, Canvas.ClipY-30-148);
+				break;
+				default:
 			}
 		}
 	}
@@ -281,17 +258,109 @@ function DrawMap()
 function BoxPositionalInformation(float width, float height, float widthToStartAt, float heightToStartAt){
 	local SinisterPlayerTracker     pt;
 	local String                    checkpointlog;
+	local String                    positionalOrder;
 	local UTVehicle_Sinister        vehicleAtHand;
+	local SinisterPlayerController  pc;
+	local array<SinisterPlayerTracker> SinisterPlayers;
+	local bool humanWinning;
 
 	checkpointlog = "";
+	positionalOrder = "";
+	humanWinning = false;
 
 	foreach gameContext.TheSinisterPlayers(pt){
-		vehicleAtHand = UTVehicle_Sinister( pt.c.Pawn );
-		checkpointlog $= "Player" $ pt.c.PlayerNum $ "\n" $ pt.lastCheckpointPassed $ "/" $ gameContext.checkpointsPerLapCount $ " Checkpoints\nLap " $ (pt.lastLapCompleted + 1) $ "/" $ gameContext.lapCount $ "\n" $ "Speed: " $ int( VSize( vehicleAtHand.Velocity ) * 0.0681825 ) $ "Km/H \n" $ "Terrain Impact: " $ int( vehicleAtHand.AirSpeed );
+		pc = SinisterPlayerController( pt.c );
+		if (pc != None){
+			//human
+			vehicleAtHand = UTVehicle_Sinister( pt.c.Pawn );
+			checkpointlog $= "Player" $ pt.c.PlayerNum $ "\n" $ pt.lastCheckpointPassed $ "/" $ gameContext.checkpointsPerLapCount $ " Checkpoints\nLap " $ (pt.lastLapCompleted + 1) $ "/" $ gameContext.lapCount $ "\n" $ "Speed: " $ int( VSize( vehicleAtHand.Velocity ) * 0.0681825 ) $ "Km/H \n" $ "Terrain Impact: " $ int( vehicleAtHand.AirSpeed ) $ "\n\n";
+			break;
+		}
+		SinisterPlayers.AddItem(pt);
+	}
+
+	if (SinisterPlayers[0].lastLapCompleted > SinisterPlayers[1].lastLapCompleted){
+		`log("TESTERLOG 1");
+		if (SinisterPlayers[0].human){
+			`log("TESTERLOG 2");
+			humanWinning = true;
+		}
+		else {
+			`log("TESTERLOG 3");
+			humanWinning = false;
+		}
+	}
+	else if  (SinisterPlayers[0].lastLapCompleted < SinisterPlayers[1].lastLapCompleted){
+		`log("TESTERLOG 4");
+		if (SinisterPlayers[0].human){
+			`log("TESTERLOG 5");
+			humanWinning = false;
+		}
+		else {
+			`log("TESTERLOG 6");
+			humanWinning = true;
+		}
+	}
+	else {
+		`log("TESTERLOG 7");
+		if (SinisterPlayers[0].lastCheckpointPassed > SinisterPlayers[1].lastCheckpointPassed){
+			`log("TESTERLOG 8");
+			if (SinisterPlayers[0].human){
+				`log("TESTERLOG 9");
+				humanWinning = true;
+			}
+			else {
+				`log("TESTERLOG 10");
+				humanWinning = false;
+			}
+		}
+		else if  (SinisterPlayers[0].lastCheckpointPassed < SinisterPlayers[1].lastCheckpointPassed){
+			`log("TESTERLOG 11");
+			if (SinisterPlayers[0].human){
+				`log("TESTERLOG 12");
+				humanWinning = false;
+			}
+			else {
+				`log("TESTERLOG 13");
+				humanWinning = true;
+			}
+		}
+		else {
+			`log("TESTERLOG 14");
+			if (SinisterPlayers[0].lastCheckinTime > SinisterPlayers[1].lastCheckinTime){
+				`log("TESTERLOG 15");
+				if (SinisterPlayers[0].human){
+					`log("TESTERLOG 16");
+					humanWinning = false;
+				}
+				else {
+					`log("TESTERLOG 17");
+					humanWinning = true;
+				}
+			}
+			else if  (SinisterPlayers[0].lastCheckinTime < SinisterPlayers[1].lastCheckinTime){
+				`log("TESTERLOG 18");
+				if (SinisterPlayers[0].human){
+					`log("TESTERLOG 19");
+					humanWinning = true;
+				}
+				else {
+					`log("TESTERLOG 20");
+					humanWinning = false;
+				}
+			}
+		}
+	}
+	
+	if (humanWinning){
+		positionalOrder = "1st Place: You\n2nd Place: Computer";
+	}
+	else {
+		positionalOrder = "1st Place: Computer\n2nd Place: Human";
 	}
 
 	DrawHUDBox(width, height, widthToStartAt, heightToStartAt);
-	WriteText(checkpointlog, class'Engine'.static.GetLargeFont(), widthToStartAt+10, heightToStartAt+10);
+	WriteText(checkpointlog $ positionalOrder, class'Engine'.static.GetLargeFont(), widthToStartAt+10, heightToStartAt+10);
 }
 
 function WriteText(string text, Font size, float widthToStartAt, float heightToStartAt)

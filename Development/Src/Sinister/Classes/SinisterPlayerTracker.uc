@@ -7,6 +7,7 @@ var SinisterGame gameContext;
 var float lastCheckinTime;
 var int lastCheckpointPassed;
 var int lastLapCompleted;
+var bool human;
 
 //Weapons
 var int weaponChoice;
@@ -51,4 +52,5 @@ DefaultProperties
 	lastCheckpointPassed = 0;
 	lastLapCompleted = 0;
 	weaponChoice = 0;
+	human = true;
 }
