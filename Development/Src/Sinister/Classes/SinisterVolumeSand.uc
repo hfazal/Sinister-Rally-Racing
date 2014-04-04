@@ -17,7 +17,6 @@ event Touch( Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vect
 
 	Super.Touch(Other, OtherComp, HitLocation, HitNormal);
 
-	`log("SAND VOLUME TOUCHED");
 	//add SAND to the stack here
 
 	pawnAtHand = Pawn( Other );                                                     //attempt to cast the actor that touched 
@@ -48,7 +47,6 @@ event Untouch( Actor Other )
 
 	x = false;
 
-	`log("SAND VOLUME UNTOUCHED");
 	//remove the first SAND from the stack
 
 	pawnAtHand = Pawn( Other );                                                     //attempt to cast the actor that touched 

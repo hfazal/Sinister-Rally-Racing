@@ -59,8 +59,6 @@ function Timer(){
 
 DefaultProperties
 {
-	//bStatic=False;
-	//PlayerControllerClass=class'Sinister.SinisterPlayerController'
 	bCollideActors=true    
     bBlockActors=false
     

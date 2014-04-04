@@ -8,7 +8,6 @@ var vector locationToTarget;
 event Tick(float DeltaTime){
 	local Vector newLocation;
 	local int moveby;
-	local Controller bllahfdh;
 	local SinisterPlayerTracker pt;
 
 	moveby=30;
@@ -16,7 +15,6 @@ event Tick(float DeltaTime){
 	foreach gameContext.TheSinisterPlayers(pt){
 		if (target.c.PlayerNum == pt.c.PlayerNum){
 			//this is the target
-			`log("hi2");
 			locationToTarget.X  = pt.c.Pawn.Location.X;
 			locationToTarget.Y  = pt.c.Pawn.Location.Y;
 			locationToTarget.Z  = pt.c.Pawn.Location.Z;
@@ -25,8 +23,6 @@ event Tick(float DeltaTime){
 
 	newLocation = self.Location;
 
-	//`log("Before Update " $ self.Location.X $ " + " $ self.Location.Y $ " + " $ self.Location.Z );
-	//`log("NL Before Update " $ newLocation.X $ " + " $ newLocation.Y $ " + " $ newLocation.Z );
 	//X
 	if (locationToTarget.X > self.Location.X){
 		newLocation.X = newLocation.X + moveby;
@@ -43,21 +39,10 @@ event Tick(float DeltaTime){
 	}
 	//Z
 	if ( (locationToTarget.X - self.Location.X <= 60 && locationToTarget.X - self.Location.X >= -60) && (locationToTarget.Y - self.Location.Y <= 60 && locationToTarget.Y - self.Location.Y >= -60)){
-		if (target.c.Location.Z > self.Location.Z){
-			`log("LESS THAN FOR Z");
-			newLocation.Z += moveby;
-		}
-		else { // (target.c.Location.Z < self.Location.Z)
-			`log("LESS THAN FOR Z");
-			newLocation.Z -= moveby;
-		}
+		newLocation.Z -= moveby;
 	}
 	
-
 	self.SetLocation(newLocation);
-
-	`log("After Update " $ self.Location.X $ " + " $ self.Location.Y $ " + " $ self.Location.Z );
-	`log("NL After Update " $ newLocation.X $ " + " $ newLocation.Y $ " + " $ newLocation.Z );
 }
 
 event PostBeginPlay()
@@ -70,20 +55,23 @@ event PostBeginPlay()
 
 event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vector HitNormal)
 {
-	local Pawn                         pawnAtHand;
-	local UTVehicle                    vehicleAtHand;
+	local Pawn                          pawnAtHand;
+	local UTVehicle                     vehicleAtHand;
+	local Volume                        volumeAtHand;
 
 	Super.Touch(Other, OtherComp, HitLocation, HitNormal);
 
 	pawnAtHand = Pawn( Other );   //attempt to cast the actor that touched 
 	vehicleAtHand = UTVehicle( Other );
+	volumeAtHand = Volume( Other );
 
 	if(vehicleAtHand != None)
 	{	
 		pawnAtHand.Suicide();
 	}
-
-	self.Destroy(); 
+	if(volumeAtHand == None){
+		self.Destroy(); 
+	}
 }
 
 

@@ -25,8 +25,7 @@ var CanvasIcon minimapCheckpoint;
 
 var Font newfont;
 
-simulated event PostBeginPlay()
-{
+simulated event PostBeginPlay(){
 	//local PlayerController c;
 	//local SinisterPlayerTracker pt;
 
@@ -160,14 +159,10 @@ function DrawMap()
 	//Calculate upper left UV coordinate
 	StartPos.X = FClamp(RotPlayerPos.X + (0.5 - (TileSize / 2.0)),0.0,1.0 - TileSize);
 	StartPos.Y = FClamp(RotPlayerPos.Y + (0.5 - (TileSize / 2.0)),0.0,1.0 - TileSize);
-	//StartPos.X = FClamp(DisplayPlayerPos.X + (0.5 - (TileSize / 2.0)),TileSize/-2,1.0 - TileSize/2);
-	//StartPos.Y = FClamp(DisplayPlayerPos.Y + (0.5 - (TileSize / 2.0)),TileSize/-2,1.0 - TileSize/2);
 
 	//Calculate texture panning for alpha
 	MapOffset.R =  FClamp(-1.0 * RotPlayerPos.X,-0.5 + (TileSize / 2.0),0.5 - (TileSize / 2.0));
 	MapOffset.G =  FClamp(-1.0 * RotPlayerPos.Y,-0.5 + (TileSize / 2.0),0.5 - (TileSize / 2.0));
-	//MapOffset.R =  FClamp(-1.0 * DisplayPlayerPos.X,-0.5,0.5);
-	//MapOffset.G =  FClamp(-1.0 * DisplayPlayerPos.Y,-0.5,0.5);
 
 	GameMinimapMIC = new(Outer) class'MaterialInstanceConstant';
 	GameMinimapMIC.SetParent( GameMinimap.Minimap );
@@ -193,13 +188,14 @@ function DrawMap()
 	*  Draw Other Players
 	*****************************/
 
-	foreach WorldInfo.AllControllers(class'Controller',C)
+
+	foreach gameContext.TheSinisterPlayers(pt)
 	{
-		if(PlayerController(C) != PlayerOwner)
+		if (PlayerController(pt.c) != PlayerOwner)
 		{
 			//Calculate normalized player position
-			PlayerPos.Y = (GameMinimap.MapCenter.X - C.Pawn.Location.X) / ActualMapRange;
-			PlayerPos.X = (C.Pawn.Location.Y - GameMinimap.MapCenter.Y) / ActualMapRange;
+			PlayerPos.Y = (GameMinimap.MapCenter.X - pt.c.Pawn.Location.X) / ActualMapRange;
+			PlayerPos.X = (pt.c.Pawn.Location.Y - GameMinimap.MapCenter.Y) / ActualMapRange;
 
 			//Calculate position for displaying the player in the map
 			DisplayPlayerPos.X = VSize(PlayerPos) * Cos( ATan2(PlayerPos.Y, PlayerPos.X) - MapRotation);
@@ -259,7 +255,7 @@ function BoxPositionalInformation(float width, float height, float widthToStartA
 	local SinisterPlayerTracker     pt;
 	local String                    checkpointlog;
 	local String                    positionalOrder;
-	local UTVehicle_Sinister        vehicleAtHand;
+	local UTVehicle                 vehicleAtHand;
 	local SinisterPlayerController  pc;
 	local array<SinisterPlayerTracker> SinisterPlayers;
 	local bool humanWinning;
@@ -269,83 +265,64 @@ function BoxPositionalInformation(float width, float height, float widthToStartA
 	humanWinning = false;
 
 	foreach gameContext.TheSinisterPlayers(pt){
+		vehicleAtHand = UTVehicle( pt.c.Pawn );
+
 		pc = SinisterPlayerController( pt.c );
-		if (pc != None){
+		SinisterPlayers.AddItem(pt);
+		if (pc != None && vehicleAtHand != None){
 			//human
 			vehicleAtHand = UTVehicle_Sinister( pt.c.Pawn );
-			checkpointlog $= "Player" $ pt.c.PlayerNum $ "\n" $ pt.lastCheckpointPassed $ "/" $ gameContext.checkpointsPerLapCount $ " Checkpoints\nLap " $ (pt.lastLapCompleted + 1) $ "/" $ gameContext.lapCount $ "\n" $ "Speed: " $ int( VSize( vehicleAtHand.Velocity ) * 0.0681825 ) $ "Km/H \n" $ "Terrain Impact: " $ int( vehicleAtHand.AirSpeed ) $ "\n\n";
-			break;
+			checkpointlog $= pt.lastCheckpointPassed $ "/" $ gameContext.checkpointsPerLapCount $ " Checkpoints\nLap " $ (pt.lastLapCompleted + 1) $ "/" $ gameContext.lapCount $ "\n" $ "Speed: " $ int( VSize( vehicleAtHand.Velocity ) * 0.0681825 ) * 2 $ "Km/H \n" $ "\n\n";
 		}
-		SinisterPlayers.AddItem(pt);
 	}
 
 	if (SinisterPlayers[0].lastLapCompleted > SinisterPlayers[1].lastLapCompleted){
-		`log("TESTERLOG 1");
 		if (SinisterPlayers[0].human){
-			`log("TESTERLOG 2");
 			humanWinning = true;
 		}
 		else {
-			`log("TESTERLOG 3");
 			humanWinning = false;
 		}
 	}
 	else if  (SinisterPlayers[0].lastLapCompleted < SinisterPlayers[1].lastLapCompleted){
-		`log("TESTERLOG 4");
 		if (SinisterPlayers[0].human){
-			`log("TESTERLOG 5");
 			humanWinning = false;
 		}
 		else {
-			`log("TESTERLOG 6");
 			humanWinning = true;
 		}
 	}
 	else {
-		`log("TESTERLOG 7");
 		if (SinisterPlayers[0].lastCheckpointPassed > SinisterPlayers[1].lastCheckpointPassed){
-			`log("TESTERLOG 8");
 			if (SinisterPlayers[0].human){
-				`log("TESTERLOG 9");
 				humanWinning = true;
 			}
 			else {
-				`log("TESTERLOG 10");
 				humanWinning = false;
 			}
 		}
 		else if  (SinisterPlayers[0].lastCheckpointPassed < SinisterPlayers[1].lastCheckpointPassed){
-			`log("TESTERLOG 11");
 			if (SinisterPlayers[0].human){
-				`log("TESTERLOG 12");
 				humanWinning = false;
 			}
 			else {
-				`log("TESTERLOG 13");
 				humanWinning = true;
 			}
 		}
 		else {
-			`log("TESTERLOG 14");
 			if (SinisterPlayers[0].lastCheckinTime > SinisterPlayers[1].lastCheckinTime){
-				`log("TESTERLOG 15");
 				if (SinisterPlayers[0].human){
-					`log("TESTERLOG 16");
 					humanWinning = false;
 				}
 				else {
-					`log("TESTERLOG 17");
 					humanWinning = true;
 				}
 			}
 			else if  (SinisterPlayers[0].lastCheckinTime < SinisterPlayers[1].lastCheckinTime){
-				`log("TESTERLOG 18");
 				if (SinisterPlayers[0].human){
-					`log("TESTERLOG 19");
 					humanWinning = true;
 				}
 				else {
-					`log("TESTERLOG 20");
 					humanWinning = false;
 				}
 			}

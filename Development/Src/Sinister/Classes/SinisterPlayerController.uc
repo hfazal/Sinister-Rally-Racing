@@ -49,8 +49,6 @@ exec function respawnSinisterPlayer(){
 
 			gameContext.RestartPlayer(pt.c);
 			pt.c.SetLocation(locationToSpawnAt);
-
-			//break;
 		}
 	}	
 }
@@ -67,7 +65,7 @@ exec function startSpeedBoost() {
 	foreach gameContext.TheSinisterPlayers(pt){
 		if (self.PlayerNum == pt.c.PlayerNum){
 			vehicleAtHand = UTVehicle_Sinister( self.Pawn ); // casts it
-			`log(vehicleAtHand.Location.X $ " " $ vehicleAtHand.Location.Y $ " " $ vehicleAtHand.Location.Z $ " " $ vehicleAtHand.Rotation.Yaw);
+			//`log(vehicleAtHand.Location.X $ " " $ vehicleAtHand.Location.Y $ " " $ vehicleAtHand.Location.Z $ " " $ vehicleAtHand.Rotation.Yaw);
 				
 			switch (pt.weaponChoice){
 				case 0:
@@ -93,8 +91,6 @@ exec function startSpeedBoost() {
 							x.target = pt2;
 						}
 					}
-					`log("Original " $ x.Location.X $ " + " $ x.Location.Y $ " + " $ x.Location.Z );
-					`log("Target " $ x.target.c.Location.X $ " + " $ x.target.c.Location.Y $ " + " $ x.target.c.Location.Z );
 
 					pt.weaponChoice=0;
 					break;
@@ -104,29 +100,24 @@ exec function startSpeedBoost() {
 
 					if ( vehicleAtHand.Rotation.Yaw >= 8192 && vehicleAtHand.Rotation.Yaw <= 24576 ){
 						//facing north
-						`log("facing north");
 						adjustYBy = offsetItemBoxBy * -1.0;
 					}
 					else if ( vehicleAtHand.Rotation.Yaw >= -24576 && vehicleAtHand.Rotation.Yaw <= -8192 ){
 						//facing south
-						`log("facing south");
 						adjustYBy = offsetItemBoxBy;
 					}
 					else if ( (vehicleAtHand.Rotation.Yaw >= 24576 && vehicleAtHand.Rotation.Yaw <= 32768) || (vehicleAtHand.Rotation.Yaw >= -32768 && vehicleAtHand.Rotation.Yaw <= -8192) ){
 						//facing east
-						`log("facing east");
 						adjustXBy = offsetItemBoxBy;
 					}
 					else if ( (vehicleAtHand.Rotation.Yaw >= 0 && vehicleAtHand.Rotation.Yaw <= 8192) || (vehicleAtHand.Rotation.Yaw >= -8192 && vehicleAtHand.Rotation.Yaw <= 0) ){
 						//facing west
-						`log("facing west");
 						adjustXBy = offsetItemBoxBy * -1.0;
 					}
-                    	
 
 					hello.X=vehicleAtHand.Location.X + adjustXBy;
 					hello.Y=vehicleAtHand.Location.Y + adjustYBy;
-					hello.Z=vehicleAtHand.Location.Z + 35.00;
+					hello.Z=vehicleAtHand.Location.Z + 15.00;
 
 					Spawn(class'SinisterBearTrap',,,hello);
 					pt.weaponChoice=0;
