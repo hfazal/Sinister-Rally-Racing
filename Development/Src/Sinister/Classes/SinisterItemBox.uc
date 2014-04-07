@@ -50,6 +50,9 @@ event Touch(Actor Other, PrimitiveComponent OtherComp, vector HitLocation, vecto
 
 			}
 		}
+		if (!pt.human) {
+			//pawnAtHand.
+		}
 	}
 } 
 
