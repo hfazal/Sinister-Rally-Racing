@@ -86,7 +86,7 @@ exec function shootWeapon() {
 					break;
 				case 2:    //lets say this is the missile
 					//code for the missile
-					hello.X=vehicleAtHand.Location.X;
+					/*hello.X=vehicleAtHand.Location.X;
 					hello.Y=vehicleAtHand.Location.Y;
 					hello.Z=vehicleAtHand.Location.Z + 150.00;
 
@@ -96,7 +96,7 @@ exec function shootWeapon() {
 							x.target = pt2;
 						}
 					}
-
+				*/
 					pt.weaponChoice=0;
 					break;
 				case 3:    //lets say this is the bear trap
