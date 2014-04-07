@@ -10,7 +10,7 @@ event Tick(float DeltaTime){
 	local int moveby;
 	local SinisterPlayerTracker pt;
 
-	moveby=30;
+	moveby=60;
 
 	foreach gameContext.TheSinisterPlayers(pt){
 		if (target.c.PlayerNum == pt.c.PlayerNum){
@@ -39,7 +39,12 @@ event Tick(float DeltaTime){
 	}
 	//Z
 	if ( (locationToTarget.X - self.Location.X <= 60 && locationToTarget.X - self.Location.X >= -60) && (locationToTarget.Y - self.Location.Y <= 60 && locationToTarget.Y - self.Location.Y >= -60)){
-		newLocation.Z -= moveby;
+		if (target.c.Location.Z > self.Location.Z){
+ 			newLocation.Z += moveby;
+ 		}
+ 		else { // (target.c.Location.Z < self.Location.Z)
+ 			newLocation.Z -= moveby;
+ 		}
 	}
 	
 	self.SetLocation(newLocation);
