@@ -79,6 +79,19 @@ function onlyDisplayCheckpoint(int checkpointToMakeVisible){
 	}
 }
 
+function RespawnCar(Controller aPlayer, Vector location)
+{
+
+	//aPlayer.Destroy();
+	
+     //ForceRespawn();
+	Super.RestartPlayer(aPlayer);
+	//aPlayer.Location = location;
+	aPlayer.SetLocation(location);
+	//aPlayer.SetLocation(location);
+
+}
+
 DefaultProperties
 {
 	PlayerControllerClass=class'Sinister.SinisterPlayerController'

@@ -36,21 +36,36 @@ exec function respawnSinisterPlayer(){
 
 	vehicleAtHand = UTVehicle_Sinister( self.Pawn );
 
-	foreach gameContext.TheSinisterCheckpoints(pc){
-		if (checkpointToSpawnAt == pc.CheckpointOrder){
-			locationToSpawnAt = pc.Location;
-			break;
-		}
-	}
-
 	foreach gameContext.TheSinisterPlayers(pt){
 		if (self.PlayerNum == pt.c.PlayerNum){
 			checkpointToSpawnAt = pt.lastCheckpointPassed;
-
-			gameContext.RestartPlayer(pt.c);
-			pt.c.SetLocation(locationToSpawnAt);
+			`log("printing checkpointToSpawnAt -- ");
+			`log(checkpointToSpawnAt);
+			break;
+			//gameContext.RespawnCar(pt.c);
+			//pt.c.SetLocation(locationToSpawnAt);		
 		}
-	}	
+	}
+
+	foreach gameContext.TheSinisterCheckpoints(pc){
+		if (checkpointToSpawnAt == pc.CheckpointOrder){
+			`log("printing pc.CheckpointOrder -- ");
+			`log(pc.CheckpointOrder);
+			locationToSpawnAt = pt.c.Location;
+			`log("printing pc.Location -- ");
+			`log(pc.Location);
+			//break;
+
+			vehicleAtHand.Destroy();
+			//self.Destroy();
+			gameContext.RespawnCar(pt.c, pt.c.Location);
+			//gameContext.RespawnCar(pt.c);
+			//pt.c.SetLocation(locationToSpawnAt);
+			//pc.SetLocation(pc.Location);
+		}
+	}
+
+	//self.Destroy();
 }
 
 exec function startSpeedBoost() {
