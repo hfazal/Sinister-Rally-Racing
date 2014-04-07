@@ -1,7 +1,7 @@
 class RaceAIController extends UTBot;
 
 var array<Race_Pathnode> Waypoints;
-var int RaceNode; //declare it at the start so you can use it throughout the script
+var int RaceNode; 
 var int CloseEnough;
 var SinisterGame gameContext;
 
@@ -29,7 +29,6 @@ simulated function PostBeginPlay()
 
 simulated function Tick(float DeltaTime)
 {
-   //use local as its only needed in this function
   local int Distance;
 
   super.Tick(DeltaTime);
@@ -68,13 +67,13 @@ function SetMaxDesiredSpeed()
 
        if (V != None)
 	{
-             V.AirSpeed = Waypoints[RaceNode].MaxSpeed;
+             V.AirSpeed = Waypoints[RaceNode].MaxSpeed + 100;
              V.GroundSpeed = Waypoints[RaceNode].MaxSpeed;
         }
 }
 
-//also give closeenough some velue in default properties
+
 DefaultProperties
 {
-CloseEnough=600
+	CloseEnough=600
 }
